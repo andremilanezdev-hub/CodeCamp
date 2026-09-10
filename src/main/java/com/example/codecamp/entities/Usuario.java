@@ -27,6 +27,7 @@ public class Usuario {
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
+    private String senha;
 
     public String getStatus() {
         return status;
@@ -57,9 +58,7 @@ public class Usuario {
         return this.nome;
     }
     public void setNome(String nome) {
-        if (this.nome.isEmpty()) {
             this.nome = nome;
-        }
     }
 
     public String getCpf(){
@@ -76,4 +75,11 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 }
