@@ -13,9 +13,10 @@ public class Estudante {
     public Estudante() {
     }
 
-    public Estudante(String nome, String email, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
+    public Estudante(String nome, String email, String cpf, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
         this.nome = nome;
         this.email = email;
+        this.cpf = cpf;
         this.dataCadastro = dataCadastro;
         this.dataAtualizacao = dataAtualizacao;
         this.status = status;
@@ -26,6 +27,7 @@ public class Estudante {
     private Long id;
     private String nome;
     private String email;
+    private String cpf;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
@@ -70,5 +72,13 @@ public class Estudante {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 }//Fim da classe principal

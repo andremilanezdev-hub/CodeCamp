@@ -56,7 +56,7 @@ public class ModuloController {
 
         if (modulo !=null){
             modulo.setNome(moduloRequest.getNome());
-            modulo.setCargahoraria(moduloRequest.getCargahoraria());
+            modulo.setCargahoraria((long) moduloRequest.getCargahoraria());
             modulo.setDataAtualizacao(LocalDateTime.now());
             moduloRepository.save(modulo);
             return ResponseEntity.ok(new ModuloResponse(modulo.getId(),

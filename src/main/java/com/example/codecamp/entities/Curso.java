@@ -29,44 +29,51 @@ public class Curso {
     private LocalDateTime dataAtualizacao;
     private String status;
 
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
-
-    public LocalDateTime getDataCadastro() {
-        return dataCadastro;
-    }
-    public void setDataCadastro(LocalDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
     public Long getId() {
-        return this.id;
+        return id;
     }
 
-    public String getNome(){
-        return this.nome;
+    public void setId(Long id) {
+        this.id = id;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
     public void setNome(String nome) {
-        if (this.nome.isEmpty()) {
-            this.nome = nome;
-        }
+        this.nome = nome;
     }
 
     public long getCargahoraria() {
         return cargahoraria;
     }
+
     public void setCargahoraria(long cargahoraria) {
         this.cargahoraria = cargahoraria;
+    }
+
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -12,7 +12,7 @@ public class Modulo {
 
     public Modulo(){}
 
-    public Modulo(String nome, int cargahoraria, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
+    public Modulo(String nome, Long cargahoraria, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
         this.nome = nome;
         this.cargahoraria = cargahoraria;
         this.dataCadastro = dataCadastro;
@@ -24,48 +24,56 @@ public class Modulo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private int cargahoraria;
+    private Long cargahoraria;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
 
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
+    public String getNome() {
+        return nome;
     }
 
-    public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
+
+    public Long getCargahoraria() {
+        return cargahoraria;
+    }
+
+    public void setCargahoraria(Long cargahoraria) {
+        this.cargahoraria = cargahoraria;
     }
 
     public LocalDateTime getDataCadastro() {
         return dataCadastro;
     }
+
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
-    public Long getId() {
-        return this.id;
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public String getNome(){
-        return this.nome;
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
-    public void setNome(String nome) {
-        if (this.nome.isEmpty()) {
-            this.nome = nome;
-        }
+
+    public String getStatus() {
+        return status;
     }
-    public long getCargahoraria() {
-        return cargahoraria;
+
+    public void setStatus(String status) {
+        this.status = status;
     }
-    public void setCargahoraria(int cargahoraria) {
-        this.cargahoraria = cargahoraria;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

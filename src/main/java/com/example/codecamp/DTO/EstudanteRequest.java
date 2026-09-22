@@ -2,13 +2,14 @@ package com.example.codecamp.DTO;
 
 import java.time.LocalDateTime;
 
-public class CursoRequest {
+public class EstudanteRequest {
 
-    public CursoRequest(){}
+    public EstudanteRequest(){}
 
     private Long id;
     private String nome;
-    private long cargahoraria;
+    private String email;
+    private String cpf;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
@@ -29,12 +30,20 @@ public class CursoRequest {
         this.nome = nome;
     }
 
-    public long getCargahoraria() {
-        return cargahoraria;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCargahoraria(long cargahoraria) {
-        this.cargahoraria = cargahoraria;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public LocalDateTime getDataCadastro() {
