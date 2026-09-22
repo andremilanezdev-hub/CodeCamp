@@ -62,7 +62,6 @@ public class Modulo {
             this.nome = nome;
         }
     }
-
     public long getCargahoraria() {
         return cargahoraria;
     }
