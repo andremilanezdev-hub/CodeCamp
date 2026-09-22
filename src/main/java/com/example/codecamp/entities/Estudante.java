@@ -8,26 +8,29 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class Usuario {
+public class Estudante {
 
-    public Usuario(){}
-
-
-    public Usuario(String nome, String cpf, String dataNascimento) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.dataNascimento = dataNascimento;
+    public Estudante() {
     }
+
+    public Estudante(String nome, String email, String cpf, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
+        this.nome = nome;
+        this.email = email;
+        this.cpf = cpf;
+        this.dataCadastro = dataCadastro;
+        this.dataAtualizacao = dataAtualizacao;
+        this.status = status;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String email;
     private String cpf;
-    private String dataNascimento;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
-    private String senha;
 
     public String getStatus() {
         return status;
@@ -58,28 +61,24 @@ public class Usuario {
         return this.nome;
     }
     public void setNome(String nome) {
+        if (this.nome.isEmpty()) {
             this.nome = nome;
+        }
     }
 
-    public String getCpf(){
-        return this.cpf;
+    public String getEmail() {
+        return email;
     }
-    public void setCpf(String cpf){
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
-    public String getDataNascimento(){
-        return this.dataNascimento;
-    }
-    public void setDataNascimento(String dataNascimento){
-        this.dataNascimento = dataNascimento;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-}
+}//Fim da classe principal
