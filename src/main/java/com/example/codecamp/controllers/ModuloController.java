@@ -72,7 +72,7 @@ public class ModuloController {
         Modulo modulo = moduloRepository.findById(id).orElse(null);
 
         if (modulo !=null){
-            modulo.setStatus(modulo.getStatus());
+            modulo.setStatus(moduloRequest.getStatus());
             moduloRepository.save(modulo);
             return ResponseEntity.ok(new ModuloResponse(modulo.getId(),
                     "Status Modulo Atualizado com sucesso!"));
