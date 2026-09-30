@@ -8,6 +8,15 @@ public class UsuarioRequest {
     private String cpf;
     private String dataNascimento;
     private  String senha;
+    private Long empresa_id;
+
+    public Long getEmpresa_id() {
+        return empresa_id;
+    }
+
+    public void setEmpresa_id(Long empresa_id) {
+        this.empresa_id = empresa_id;
+    }
 
     public String getNome() {return nome;}
     public void setNome(String nome) {this.nome = nome;}
