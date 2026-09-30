@@ -1,9 +1,11 @@
 package com.example.codecamp.controllers;
 
 import com.example.codecamp.DTO.AtualizaStatusUsuarioRequest;
+import com.example.codecamp.DTO.UsuarioConsultaResponse;
 import com.example.codecamp.DTO.UsuarioRequest;
 import com.example.codecamp.DTO.UsuarioResponse;
 import com.example.codecamp.entities.Usuario;
+import com.example.codecamp.repository.EmpresaRepository;
 import com.example.codecamp.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,12 @@ public class UsuarioController {
     @Autowired
     //Toda Injeção de dependencia é privada
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @GetMapping
-    public List<Usuario> ConsultaUsuario() {
-        return usuarioRepository.findAll();
+    public List<UsuarioConsultaResponse> ConsultaUsuario() {
+        return usuarioRepository.findAll().stream().map(UsuarioConsultaResponse::new).toList();
     }
 
     @GetMapping("/{id}")
@@ -42,20 +46,29 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse>CadastrarUsuario(@RequestBody Usuario usuarioRequest){
+    public ResponseEntity<UsuarioResponse>CadastrarUsuario(@RequestBody UsuarioRequest usuarioRequest){
+
+        // Busca e valida a empresa
+        var empresaBanco = empresaRepository.findById(usuarioRequest.getEmpresa_id()).orElse(null);
+
+        if (empresaBanco == null){
+            return ResponseEntity.notFound().build();
+        }
+
         Usuario usuarioBanco = new Usuario();
         usuarioBanco.setNome(usuarioRequest.getNome());
         usuarioBanco.setCpf(usuarioRequest.getCpf());
         usuarioBanco.setDataNascimento(usuarioRequest.getDataNascimento());
+        usuarioBanco.setSenha(usuarioRequest.getSenha());
+        usuarioBanco.setEmpresa(empresaBanco); //vincula a empresa
         usuarioBanco.setDataCadastro(LocalDateTime.now());
         usuarioBanco.setStatus("A");
-        usuarioBanco.setSenha(usuarioRequest.getSenha());
 
         //Salvando no banco
         usuarioRepository.save(usuarioBanco);
 
         return ResponseEntity.ok(new UsuarioResponse(usuarioBanco.getId(),
-                "Usuario Atualizado com sucesso!"));
+                "Cadastro com sucesso!"));
     }
 
     @PutMapping("/{id}")
@@ -65,6 +78,12 @@ public class UsuarioController {
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
 
         if (usuarioBanco !=null){
+            var empresaBanco = empresaRepository.findById(usuarioRequest.getEmpresa_id()).orElse(null);
+
+            if (empresaBanco == null){
+                return ResponseEntity.notFound().build();
+            }
+
             usuarioBanco.setNome(usuarioRequest.getNome());
             usuarioBanco.setCpf(usuarioRequest.getCpf());
             usuarioBanco.setDataNascimento(usuarioRequest.getDataNascimento());
