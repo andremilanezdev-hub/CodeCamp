@@ -7,6 +7,18 @@ public class ModuloRequest {
     private Long id;
     private String nome;
     private int cargahoraria;
+    private Long empresa_id;
+
+
+
+    //Get and Setter
+    public Long getEmpresa_id() {
+        return empresa_id;
+    }
+
+    public void setEmpresa_id(Long empresa_id) {
+        this.empresa_id = empresa_id;
+    }
 
     public Long getId() {
         return id;

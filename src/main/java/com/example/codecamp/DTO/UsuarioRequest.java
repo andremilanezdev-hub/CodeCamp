@@ -7,7 +7,7 @@ public class UsuarioRequest {
     private String nome;
     private String cpf;
     private String dataNascimento;
-    private  String senha;
+    private String senha;
     private Long empresa_id;
 
     public Long getEmpresa_id() {
