@@ -2,6 +2,7 @@ package com.example.codecamp.repository;
 
 
 import com.example.codecamp.entities.Usuario;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
     Optional<Usuario> getUsuarioByCpf(String cpf);
     //Retorna vários registros
     Optional<List<Usuario>> getUsuariosByStatus(String status);
+
+    Example<? extends Usuario> id(Long id);
 }

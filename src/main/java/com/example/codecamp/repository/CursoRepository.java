@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
+//Torna repository
 @Repository
 public interface CursoRepository extends JpaRepository<Curso,Long> {
 
+    
     boolean existsCursoById(Long id);
     Optional<List<Curso>> getCursoByNomeContaining(String nome);
     Optional<List<Curso>> getCursoByStatus(String status);

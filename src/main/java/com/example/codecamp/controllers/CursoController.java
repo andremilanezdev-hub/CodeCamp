@@ -11,19 +11,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+//Transforma em uma controller
 @RestController
+//Mapeia a controller
 @RequestMapping("/curso")
 public class CursoController {
-
+    //Injeção de dependencias: Alocar outros arquivos que necessita no momento depois remove de memória
     @Autowired
-
     private CursoRepository cursoRepository;
-
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     //Lista todos os cursos
     @GetMapping
-    public List<Curso> ConsultaCuros() {
-        return cursoRepository.findAll();
+    public List<CursoConsultaResponse> ConsultaCuros() {
+        return cursoRepository.findAll().stream().map(CursoConsultaResponse::new).toList();
     }
 
 
@@ -35,18 +36,21 @@ public class CursoController {
         }
         return  ResponseEntity.ok(curso);
     }
+
+
     //Cadastro curso
     @PostMapping
-    public ResponseEntity<CursoResponse>CadastrarCurso(@RequestBody Curso cursoRequest){
-        Curso curso = new Curso();
-        curso.setNome(cursoRequest.getNome());
-        curso.setCargahoraria(cursoRequest.getCargahoraria());
-        curso.setDataCadastro(LocalDateTime.now());
-        curso.setStatus("A");
-        //Salvando no banco
-        cursoRepository.save(curso);
-        return ResponseEntity.ok(new CursoResponse(curso.getId(),
-                "Curso Cadastrado com sucesso!"));
+    public ResponseEntity<CursoResponse>CadastrarCurso(@RequestBody CursoRequest cursoRequest){
+
+        Curso cursoBanco = new Curso();
+        cursoBanco.setNome(cursoRequest.getNome());
+        cursoBanco.setCargahoraria(cursoRequest.getCargahoraria());
+
+
+        cursoRepository.save(cursoBanco);
+
+        return ResponseEntity.ok(new CursoResponse(cursoBanco.getId(),"Cadastro com sucesso"));
+
     }
 
     @PutMapping("/{id}")
@@ -94,6 +98,30 @@ public class CursoController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+
+    //matricular
+    @PostMapping("/matricula")
+    public  ResponseEntity<CursoResponse> matricular(@RequestBody MatriculaRequest matriculaRequest){
+
+        var usuarioBanco = usuarioRepository.findById(matriculaRequest.getUsuario_id()).orElse(null);
+
+        var cursoBanco = cursoRepository.findById(matriculaRequest.getCurso_id()).orElse(null);
+
+        if (usuarioBanco == null || cursoBanco == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        if (cursoBanco.getAlunos().contains(usuarioBanco)){
+            throw new IllegalArgumentException("Aluno já cadastrado no curso");
+        }
+
+        cursoBanco.adicionarUsuario(usuarioBanco);
+        cursoRepository.save(cursoBanco);
+
+        return ResponseEntity.ok(new CursoResponse(cursoBanco.getId(),"Cadastro com sucesso"));
+
     }
 
 }
