@@ -99,8 +99,6 @@ public class CursoController {
         }
         return ResponseEntity.notFound().build();
     }
-
-
     //matricular
     @PostMapping("/matricula")
     public  ResponseEntity<CursoResponse> matricular(@RequestBody MatriculaRequest matriculaRequest){
@@ -121,7 +119,5 @@ public class CursoController {
         cursoRepository.save(cursoBanco);
 
         return ResponseEntity.ok(new CursoResponse(cursoBanco.getId(),"Cadastro com sucesso"));
-
     }
-
 }
