@@ -4,7 +4,6 @@ import com.example.codecamp.DTO.AtualizaStatusModuloRequest;
 import com.example.codecamp.DTO.ModuloRequest;
 import com.example.codecamp.DTO.ModuloResponse;
 import com.example.codecamp.entities.Modulo;
-import com.example.codecamp.repository.CursoRepository;
 import com.example.codecamp.repository.ModuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

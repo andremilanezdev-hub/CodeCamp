@@ -3,6 +3,8 @@ package com.example.codecamp.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Usuario {
@@ -29,6 +31,27 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
+
+    //Ligação muitos para muitos
+    @ManyToMany(fetch = FetchType.LAZY)
+    //EAGER: Traz as informação quando usuario for consultado
+    //LAZy: Necessidade, só carrega se for necessário
+    @JoinTable(
+            //Necesita dessas 3 parametros
+            name = "Usuario_cursos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "curso_id")
+    )
+    private Set<Curso> cursos = new HashSet<>();
+
+
+    public Set<Curso> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(Set<Curso> cursos) {
+        this.cursos = cursos;
+    }
 
     public void setId(Long id) {
         this.id = id;

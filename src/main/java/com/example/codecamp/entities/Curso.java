@@ -1,33 +1,60 @@
 package com.example.codecamp.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+//Tag Informa que é uma tabela no banco
 @Entity
 public class Curso {
 
     public Curso(){}
-
-    public Curso(String nome, long cargahoraria, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, String status) {
-        this.nome = nome;
-        this.cargahoraria = cargahoraria;
-        this.dataCadastro = dataCadastro;
-        this.dataAtualizacao = dataAtualizacao;
-        this.status = status;
-    }
-
+    //Atributos da entidade
+    //Tag Identifica que é o identificador da tabela
     @Id
+    //Tag para Gerador auto incremento
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //Tag para o Campo não nulo
+    @Column(nullable = false)
     private String nome;
     private long cargahoraria;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
+
+
+
+
+    //Lista de alunos sem ficar recriando os itens, apenas será alterado um registro sem ipactar quqlquer outro registro
+    @ManyToMany(mappedBy = "cursos")
+    private Set<Usuario> alunos = new HashSet<>();
+    //Relacionamento 1:1
+    @OneToOne
+    @JoinColumn(name = "usuariocadastro_id")
+    private  Usuario usuarioCadastro;
+
+
+    //Get and Seters
+
+
+    public Set<Usuario> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(Set<Usuario> alunos) {
+        this.alunos = alunos;
+    }
+
+    public Usuario getUsuarioCadastro() {
+        return usuarioCadastro;
+    }
+
+    public void setUsuarioCadastro(Usuario usuarioCadastro) {
+        this.usuarioCadastro = usuarioCadastro;
+    }
 
     public Long getId() {
         return id;
@@ -75,5 +102,12 @@ public class Curso {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    //Adicionar aluno
+    public void adicionarUsuario(Usuario usuario){
+        this.alunos.add(usuario);
+        usuario.getCursos().add(this);
     }
 }

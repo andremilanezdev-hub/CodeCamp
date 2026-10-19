@@ -2,8 +2,9 @@ package com.example.codecamp.DTO;
 
 public class CursoResponse {
 
-    public CursoResponse(){}
+    public CursoResponse(Long id){}
 
+    //Construtor com parametros
     public CursoResponse(Long id, String mensagem) {
         this.id = id;
         this.mensagem = mensagem;

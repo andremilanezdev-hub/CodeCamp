@@ -1,9 +1,6 @@
 package com.example.codecamp.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +25,21 @@ public class Modulo {
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
+
+    //Criar o relacionamento entre Modulo <> Empresa
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    private Empresa empresa;
+
+
+    //Get and Set
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
     public String getNome() {
         return nome;
