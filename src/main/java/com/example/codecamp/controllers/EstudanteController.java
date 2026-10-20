@@ -1,9 +1,7 @@
 package com.example.codecamp.controllers;
 
 import com.example.codecamp.DTO.*;
-import com.example.codecamp.entities.Curso;
 import com.example.codecamp.entities.Estudante;
-import com.example.codecamp.repository.CursoRepository;
 import com.example.codecamp.repository.EstudanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,49 +12,55 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/estudante")
+// Define os endpoints HTTP para cadastrar, consultar e atualizar estudantes.
 public class EstudanteController {
 
+    // Repositório usado para acessar os registros de estudantes.
     @Autowired
 
     private EstudanteRepository estudanteRepository;
 
-    //Lista todos os cursos
+    // GET /estudante: lista estudantes e converte as entidades para o DTO de consulta.
     @GetMapping
-    public List<Estudante> ConsultaEstudante() {
-        return estudanteRepository.findAll();
+    public List<EstudanteConsultaResponse> ConsultaEstudante() {
+        return estudanteRepository.findAll().stream()
+                .map(EstudanteConsultaResponse::new)
+                .toList();
     }
 
 
+    // GET /estudante/{id}: consulta um estudante pelo ID; responde 404 se não existir.
     @GetMapping("/{id}")
-    public ResponseEntity<Estudante> ConsultaEstudantePorID(@PathVariable Long id){
+    public ResponseEntity<EstudanteConsultaResponse> ConsultaEstudantePorID(@PathVariable Long id){
         var estudante = estudanteRepository.findById(id).orElse(null);
         if (estudante == null){
             return ResponseEntity.notFound().build();
         }
-        return  ResponseEntity.ok(estudante);
+        return ResponseEntity.ok(new EstudanteConsultaResponse(estudante));
     }
-    //Cadastro curso
+    // POST /estudante: cadastra um estudante usando os dados recebidos no corpo da requisição.
     @PostMapping
-    public ResponseEntity<EstudanteResponse>CadastrarEstudante(@RequestBody Estudante estudanteRequest){
+    public ResponseEntity<EstudanteResponse>CadastrarEstudante(@RequestBody EstudanteRequest estudanteRequest){
         Estudante estudante = new Estudante();
         estudante.setNome(estudanteRequest.getNome());
-        estudante.setCpf(estudante.getCpf());
+        estudante.setCpf(estudanteRequest.getCpf());
         estudante.setDataCadastro(LocalDateTime.now());
         estudante.setEmail(estudanteRequest.getEmail());
         estudante.setStatus("A");
-        //Salvando no banco
+        // Persiste o estudante; o banco gera seu identificador.
         estudanteRepository.save(estudante);
         return ResponseEntity.ok(new EstudanteResponse(estudante.getId(),
                 "Estudante Cadastrado com sucesso!"));
     }
 
+    // PUT /estudante/{id}: atualiza os dados editáveis de um estudante existente.
     @PutMapping("/{id}")
     public ResponseEntity<EstudanteResponse> AtualizarEstudante(@PathVariable Long id, @RequestBody EstudanteRequest estudanteRequest) {
-        //Consuta no banco
+        // Procura o estudante que será atualizado.
         Estudante estudante = estudanteRepository.findById(id).orElse(null);
 
         if (estudante !=null){
-            estudante.setNome(estudante.getNome());
+            estudante.setNome(estudanteRequest.getNome());
             estudante.setCpf(estudanteRequest.getCpf());
             estudante.setEmail(estudanteRequest.getEmail());
             estudante.setDataAtualizacao(LocalDateTime.now());
@@ -67,14 +71,15 @@ public class EstudanteController {
         return ResponseEntity.notFound().build();
     }
 
+    // PATCH /estudante/{id}/status: altera somente a situação do estudante.
     @PatchMapping("/{id}/status")
     public ResponseEntity<EstudanteResponse> AtualizarStatusEstudante(@PathVariable Long id, @RequestBody AtualizaStatusEstudanteRequest estudanteRequest) {
 
-        //Consuta no banco
+        // Procura o estudante cuja situação será alterada.
         Estudante estudante = estudanteRepository.findById(id).orElse(null);
 
         if (estudante !=null){
-            estudante.setStatus(estudante.getStatus());
+            estudante.setStatus(estudanteRequest.getStatus());
             estudanteRepository.save(estudante);
             return ResponseEntity.ok(new EstudanteResponse(estudante.getId(),
                     "Status Estudante Atualizado com sucesso!"));
@@ -82,16 +87,17 @@ public class EstudanteController {
         return ResponseEntity.notFound().build();
     }
 
+    // DELETE /estudante/{id}: marca o cadastro como desativado, sem apagar o registro.
     @DeleteMapping("/{id}")
     public ResponseEntity<EstudanteResponse> AtualizarStatus(@PathVariable Long id){
-        //Consuta no banco
+        // Procura o estudante que será desativado.
         Estudante estudante = estudanteRepository.findById(id).orElse(null);
         //Deletar do banco
         //usuarioRepository.delete(curso);
 
         if (estudante !=null){
             estudante.setStatus("D");
-            //salva no banco
+            // Salva a situação atualizada no banco.
             estudanteRepository.save(estudante);
             return ResponseEntity.ok().build();
         }

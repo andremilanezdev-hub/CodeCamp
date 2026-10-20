@@ -2,16 +2,24 @@ package com.example.codecamp.DTO;
 
 import java.time.LocalDateTime;
 
+// Transporta os dados recebidos pela API para criar ou atualizar um estudante.
 public class EstudanteRequest {
 
+    // Construtor vazio usado pelo Spring/Jackson ao converter o JSON recebido.
     public EstudanteRequest(){}
 
+    // ID opcional; os endpoints atuais identificam o registro pela URL.
     private Long id;
+    // Nome enviado para cadastro ou atualização.
     private String nome;
+    // E-mail enviado para cadastro ou atualização.
     private String email;
+    // CPF enviado para cadastro ou atualização.
     private String cpf;
+    // Campos de auditoria mantidos no DTO conforme o padrão atual do projeto.
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
+    // Situação do cadastro, usada por operações específicas.
     private String status;
 
     public Long getId() {
