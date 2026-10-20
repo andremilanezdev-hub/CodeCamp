@@ -9,11 +9,13 @@ public class UsuarioConsultaResponse {
     public UsuarioConsultaResponse() {
     }
 
+    // Converte um usuário em DTO e inclui os dados básicos da empresa vinculada, se houver.
     public UsuarioConsultaResponse(Usuario usuario){
-        this.nome = nome;
-        this.cpf = cpf;
-        this.dataNascimento = dataNascimento;
-        this.id = id;
+        this.nome = usuario.getNome();
+        this.cpf = usuario.getCpf();
+        this.dataNascimento = usuario.getDataNascimento();
+        this.id = usuario.getId();
+        // A associação pode ser nula caso o usuário não esteja vinculado a uma empresa.
         if (usuario.getEmpresa() != null){
             this.empresa_id = usuario.getEmpresa().getId();
             this.razaoSocialEmprea = usuario.getEmpresa().getRazaoSocial();
@@ -24,7 +26,9 @@ public class UsuarioConsultaResponse {
     private String nome;
     private String cpf;
     private String dataNascimento;
+    // ID da empresa associada ao usuário.
     private Long empresa_id;
+    // Razão social da empresa associada ao usuário.
     private String razaoSocialEmprea;
     private Long id;
 

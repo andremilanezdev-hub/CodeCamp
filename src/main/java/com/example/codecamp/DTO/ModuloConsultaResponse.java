@@ -6,11 +6,15 @@ public class ModuloConsultaResponse {
 
     public ModuloConsultaResponse(Modulo modulo){
 
-        this.id = getId();
-        this.nome = getNome();
-        this.cargahoraria = getCargahoraria();
-        this.empresa_id = getEmpresa_id();
-        this.razaosocialEmpresa = getRazaosocialEmpresa();
+        this.id = modulo.getId();
+        this.nome = modulo.getNome();
+        this.cargahoraria = modulo.getCargahoraria() == null
+                ? 0
+                : modulo.getCargahoraria().intValue();
+        if (modulo.getEmpresa() != null) {
+            this.empresa_id = modulo.getEmpresa().getId();
+            this.razaosocialEmpresa = modulo.getEmpresa().getRazaoSocial();
+        }
     }
 
     private Long id;
