@@ -10,12 +10,14 @@ import com.example.codecamp.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+@SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
     //Palavra magica para limpar meemória e fechar
     @Autowired

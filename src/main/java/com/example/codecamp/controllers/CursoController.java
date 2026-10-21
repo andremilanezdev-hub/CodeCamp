@@ -2,12 +2,13 @@ package com.example.codecamp.controllers;
 
 import com.example.codecamp.DTO.*;
 import com.example.codecamp.entities.Curso;
-import com.example.codecamp.entities.Usuario;
 import com.example.codecamp.repository.CursoRepository;
-import com.example.codecamp.repository.UsuarioRepository;
+import com.example.codecamp.service.InstrutorPermissaoService;
+import com.example.codecamp.service.MatriculaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,12 +16,15 @@ import java.util.List;
 @RestController
 //Mapeia a controller
 @RequestMapping("/curso")
+@SecurityRequirement(name = "bearerAuth")
 public class CursoController {
     //Injeção de dependencias: Alocar outros arquivos que necessita no momento depois remove de memória
     @Autowired
     private CursoRepository cursoRepository;
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private InstrutorPermissaoService instrutorPermissaoService;
+    @Autowired
+    private MatriculaService matriculaService;
     //Lista todos os cursos
     @GetMapping
     public List<CursoConsultaResponse> ConsultaCuros() {
@@ -40,11 +44,14 @@ public class CursoController {
 
     //Cadastro curso
     @PostMapping
-    public ResponseEntity<CursoResponse>CadastrarCurso(@RequestBody CursoRequest cursoRequest){
+    public ResponseEntity<CursoResponse>CadastrarCurso(@RequestBody CursoRequest cursoRequest,
+                                                        @RequestAttribute("usuarioAutenticadoCpf") String cpfAutenticado){
 
         Curso cursoBanco = new Curso();
         cursoBanco.setNome(cursoRequest.getNome());
         cursoBanco.setCargahoraria(cursoRequest.getCargahoraria());
+        cursoBanco.setUsuarioCadastro(instrutorPermissaoService.buscarInstrutor(
+                cursoRequest.getUsuario_id(), cpfAutenticado));
 
 
         cursoRepository.save(cursoBanco);
@@ -101,23 +108,15 @@ public class CursoController {
     }
     //matricular
     @PostMapping("/matricula")
-    public  ResponseEntity<CursoResponse> matricular(@RequestBody MatriculaRequest matriculaRequest){
+    public ResponseEntity<CursoResponse> matricular(@RequestBody MatriculaRequest matriculaRequest,
+                                                     @RequestAttribute("usuarioAutenticadoCpf") String cpfAutenticado){
+        Curso cursoBanco = matriculaService.matricular(
+                matriculaRequest.getEstudante_id(),
+                matriculaRequest.getCurso_id(),
+                matriculaRequest.getUsuario_id(),
+                cpfAutenticado
+        );
 
-        var usuarioBanco = usuarioRepository.findById(matriculaRequest.getUsuario_id()).orElse(null);
-
-        var cursoBanco = cursoRepository.findById(matriculaRequest.getCurso_id()).orElse(null);
-
-        if (usuarioBanco == null || cursoBanco == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        if (cursoBanco.getAlunos().contains(usuarioBanco)){
-            throw new IllegalArgumentException("Aluno já cadastrado no curso");
-        }
-
-        cursoBanco.adicionarUsuario(usuarioBanco);
-        cursoRepository.save(cursoBanco);
-
-        return ResponseEntity.ok(new CursoResponse(cursoBanco.getId(),"Cadastro com sucesso"));
+        return ResponseEntity.ok(new CursoResponse(cursoBanco.getId(),"Matrícula realizada com sucesso"));
     }
 }

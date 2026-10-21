@@ -1,5 +1,6 @@
 package com.example.codecamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,18 @@ public class Modulo {
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
 
+    // Curso ao qual o módulo pertence, usado para conferir quem pode alterá-lo.
+    @ManyToOne
+    @JoinColumn(name = "curso_id")
+    @JsonIgnore
+    private Curso curso;
+
+    // Instrutor associado ao módulo, persistido como chave estrangeira usuario_id.
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonIgnore
+    private Usuario usuarioCadastro;
+
 
     //Get and Set
     public Empresa getEmpresa() {
@@ -39,6 +52,22 @@ public class Modulo {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
+
+    public Usuario getUsuarioCadastro() {
+        return usuarioCadastro;
+    }
+
+    public void setUsuarioCadastro(Usuario usuarioCadastro) {
+        this.usuarioCadastro = usuarioCadastro;
     }
 
     public String getNome() {

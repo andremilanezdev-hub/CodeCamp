@@ -6,12 +6,14 @@ import com.example.codecamp.repository.EstudanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/estudante")
+@SecurityRequirement(name = "bearerAuth")
 // Define os endpoints HTTP para cadastrar, consultar e atualizar estudantes.
 public class EstudanteController {
 
