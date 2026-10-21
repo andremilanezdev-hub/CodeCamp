@@ -4,8 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 // Representa um estudante persistido no banco de dados.
@@ -41,6 +46,23 @@ public class Estudante {
     private LocalDateTime dataAtualizacao;
     // Situação do cadastro, por exemplo ativo (A) ou desativado (D).
     private String status;
+
+    // Cursos em que o estudante está matriculado; esta entidade controla a tabela de junção.
+    @ManyToMany
+    @JoinTable(
+            name = "Estudante_cursos",
+            joinColumns = @JoinColumn(name = "estudante_id"),
+            inverseJoinColumns = @JoinColumn(name = "curso_id")
+    )
+    private Set<Curso> cursos = new HashSet<>();
+
+    public Set<Curso> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(Set<Curso> cursos) {
+        this.cursos = cursos;
+    }
 
     // Retorna a situação atual do cadastro.
     public String getStatus() {

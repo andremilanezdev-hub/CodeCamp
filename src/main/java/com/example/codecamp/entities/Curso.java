@@ -31,8 +31,12 @@ public class Curso {
     //Lista de alunos sem ficar recriando os itens, apenas será alterado um registro sem ipactar quqlquer outro registro
     @ManyToMany(mappedBy = "cursos")
     private Set<Usuario> alunos = new HashSet<>();
-    //Relacionamento 1:1
-    @OneToOne
+
+    // Estudantes matriculados; a tabela de junção é controlada por Estudante.cursos.
+    @ManyToMany(mappedBy = "cursos")
+    private Set<Estudante> estudantes = new HashSet<>();
+    // Instrutor responsável pelo curso; um instrutor pode criar vários cursos.
+    @ManyToOne
     @JoinColumn(name = "usuariocadastro_id")
     private  Usuario usuarioCadastro;
 
@@ -109,5 +113,19 @@ public class Curso {
     public void adicionarUsuario(Usuario usuario){
         this.alunos.add(usuario);
         usuario.getCursos().add(this);
+    }
+
+    // Associa o estudante ao curso nos dois lados do relacionamento.
+    public void adicionarEstudante(Estudante estudante) {
+        this.estudantes.add(estudante);
+        estudante.getCursos().add(this);
+    }
+
+    public Set<Estudante> getEstudantes() {
+        return estudantes;
+    }
+
+    public void setEstudantes(Set<Estudante> estudantes) {
+        this.estudantes = estudantes;
     }
 }
