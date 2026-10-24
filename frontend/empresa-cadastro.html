@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nova Empresa | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/empresa-cadastro.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/empresa-cadastro.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner company-form-page">
+        <header class="company-form-page__header">
+          <div>
+            <p class="company-form-page__eyebrow">Administração</p>
+            <h1>Nova Empresa</h1>
+          </div>
+          <a class="company-form-page__back" href="empresas.html">Voltar para empresas</a>
+        </header>
+
+        <section class="company-form-card glass" aria-labelledby="company-form-title">
+          <div class="company-form-card__heading">
+            <h2 id="company-form-title">Dados da empresa</h2>
+            <p>Preencha os campos para adicionar uma empresa à plataforma.</p>
+          </div>
+
+          <form id="company-registration-form" class="company-registration-form" novalidate>
+            <div class="company-form-field company-form-field--wide">
+              <label for="company-legal-name">Razão Social</label>
+              <input id="company-legal-name" name="razaoSocial" type="text" autocomplete="organization" required>
+            </div>
+            <div class="company-form-field company-form-field--wide">
+              <label for="company-trade-name">Nome Fantasia</label>
+              <input id="company-trade-name" name="nomeFantasia" type="text" autocomplete="organization" required>
+            </div>
+            <div class="company-form-field">
+              <label for="company-cnpj">CNPJ</label>
+              <input id="company-cnpj" name="cnpj" type="text" inputmode="numeric" autocomplete="off" required>
+            </div>
+            <div class="company-form-field">
+              <label for="company-state-registration">Inscrição Estadual</label>
+              <input id="company-state-registration" name="inscricaoEstadual" type="text" autocomplete="off" required>
+            </div>
+
+            <p id="company-form-message" class="company-form-message" role="status" aria-live="polite"></p>
+            <div class="company-form-actions">
+              <a class="company-form-actions__cancel" href="empresas.html">Cancelar</a>
+              <button id="save-company-button" type="submit">Salvar empresa</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
