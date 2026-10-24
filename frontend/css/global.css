@@ -1,0 +1,202 @@
+/* Identidade visual compartilhada pelo login, dashboard e páginas de gestão. */
+:root {
+  color-scheme: dark;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --color-ink: #f2f8ff;
+  --color-muted: #b7c8dd;
+  --color-sidebar: rgba(9, 24, 55, 0.72);
+  --color-sidebar-hover: rgba(44, 101, 147, 0.46);
+  --color-accent: #73e4dc;
+  --color-page: #071329;
+  --color-surface: rgba(17, 37, 72, 0.52);
+  --color-border: rgba(194, 225, 255, 0.2);
+  --color-glow: rgba(61, 225, 218, 0.22);
+  --color-danger: #ff9caa;
+  --glass-blur: 18px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--color-ink);
+  background: var(--color-page);
+  line-height: 1.6;
+}
+
+/* Fundo com luzes difusas, semelhante à atmosfera da referência. */
+.gradient-bg {
+  background-color: var(--color-page);
+  background-image:
+    radial-gradient(ellipse at 18% 12%, rgba(0, 184, 193, 0.42), transparent 38%),
+    radial-gradient(ellipse at 83% 23%, rgba(45, 91, 187, 0.38), transparent 42%),
+    linear-gradient(145deg, #063b5a 0%, #09254a 48%, #080d25 100%);
+  background-attachment: fixed;
+}
+
+/* Aplique .glass em painéis, cards e blocos de conteúdo. */
+.glass {
+  border: 1px solid var(--color-border) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(121, 181, 224, 0.045)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 18px 50px rgba(0, 5, 22, 0.28), inset 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+h1,
+h2,
+h3 {
+  color: #f7fbff;
+}
+
+p {
+  color: var(--color-muted);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+button,
+.primary-button,
+.companies-button,
+.courses-button {
+  border: 1px solid rgba(121, 244, 233, 0.3);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #22aaa9, #397bd0);
+  color: #f8ffff;
+  box-shadow: 0 8px 22px rgba(19, 175, 185, 0.2);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+button:hover:not(:disabled),
+.primary-button:hover:not(:disabled),
+.companies-button:hover:not(:disabled),
+.courses-button:hover:not(:disabled) {
+  filter: brightness(1.12);
+  box-shadow: 0 10px 28px rgba(32, 201, 203, 0.3);
+}
+
+button:disabled {
+  opacity: 0.65;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid rgba(198, 226, 255, 0.3) !important;
+  border-radius: 14px !important;
+  background: rgba(227, 243, 255, 0.075) !important;
+  color: var(--color-ink) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 8, 28, 0.15);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(218, 232, 247, 0.62);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(115, 228, 220, 0.8) !important;
+  box-shadow: 0 0 0 3px rgba(74, 214, 211, 0.16);
+  outline: none;
+}
+
+label {
+  color: #e0ecf9;
+}
+
+table {
+  color: var(--color-ink);
+}
+
+table th {
+  background: rgba(165, 208, 238, 0.1) !important;
+  color: #c9dced !important;
+}
+
+table th,
+table td {
+  border-color: rgba(195, 220, 245, 0.13) !important;
+}
+
+table tbody tr:hover {
+  background: rgba(125, 197, 225, 0.075) !important;
+}
+
+.sidebar {
+  border-right: 1px solid rgba(190, 225, 255, 0.13);
+  background: rgba(5, 18, 43, 0.7) !important;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 8px 0 32px rgba(0, 7, 24, 0.18);
+}
+
+.sidebar__link {
+  border-radius: 12px !important;
+  color: #d5e6f7 !important;
+}
+
+.sidebar__link:hover,
+.sidebar__link.active {
+  border-left-color: var(--color-accent) !important;
+  background: rgba(68, 163, 187, 0.2) !important;
+  color: #fff !important;
+}
+
+.status-badge,
+.course-status {
+  border: 1px solid rgba(196, 224, 247, 0.18);
+  background: rgba(198, 220, 240, 0.12);
+  color: #d8e7f5;
+}
+
+.status-badge--active,
+.course-status--active {
+  border-color: rgba(112, 231, 188, 0.28);
+  background: rgba(59, 184, 135, 0.18);
+  color: #a5f0d0;
+}
+
+.status-badge--inactive,
+.course-status--inactive {
+  border-color: rgba(255, 165, 160, 0.28);
+  background: rgba(209, 82, 91, 0.18);
+  color: #ffc0bd;
+}
+
+.message-error,
+.users-feedback--error,
+.companies-feedback--error,
+.courses-feedback--error {
+  color: var(--color-danger) !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

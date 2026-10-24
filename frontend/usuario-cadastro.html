@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adicionar Usuário | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/usuario-cadastro.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/usuario-cadastro.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes/">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner user-form-page">
+        <header class="user-form-page__header">
+          <div>
+            <p class="user-form-page__eyebrow">Administração</p>
+            <h1>Novo Usuário</h1>
+          </div>
+          <a class="user-form-page__back" href="usuarios.html">Voltar para usuários</a>
+        </header>
+
+        <section class="user-form-card glass" aria-labelledby="user-form-title">
+          <div class="user-form-card__heading">
+            <h2 id="user-form-title">Dados do usuário</h2>
+            <p>Preencha os campos para cadastrar uma nova conta.</p>
+          </div>
+
+          <form id="user-registration-form" class="user-registration-form" novalidate>
+            <div class="user-form-field user-form-field--wide">
+              <label for="user-name">Nome</label>
+              <input id="user-name" name="nome" type="text" autocomplete="name" required>
+            </div>
+            <div class="user-form-field">
+              <label for="user-cpf">CPF</label>
+              <input id="user-cpf" name="cpf" type="text" autocomplete="off" required>
+            </div>
+            <div class="user-form-field">
+              <label for="user-birth-date">Data de Nascimento</label>
+              <input id="user-birth-date" name="dataNascimento" type="date" required>
+            </div>
+            <div class="user-form-field">
+              <label for="user-password">Senha</label>
+              <input id="user-password" name="senha" type="password" autocomplete="new-password" required>
+            </div>
+            <div class="user-form-field">
+              <label for="user-company">Empresa</label>
+              <select id="user-company" name="empresa_id" required>
+                <option value="">Carregando empresas...</option>
+              </select>
+              <small id="company-help" class="user-form-field__help"></small>
+            </div>
+
+            <p id="user-form-message" class="user-form-message" role="status" aria-live="polite"></p>
+            <div class="user-form-actions">
+              <a class="user-form-actions__cancel" href="usuarios.html">Cancelar</a>
+              <button id="save-user-button" type="submit" disabled>Salvar usuário</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciamento de Empresas | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/empresas.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/empresas.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes/">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner companies-page">
+        <header class="companies-page__header">
+          <div>
+            <p class="companies-page__eyebrow">Administração</p>
+            <h1>Gerenciamento de Empresas</h1>
+          </div>
+          <button id="new-company-button" class="companies-button" type="button">
+            <span aria-hidden="true">+</span>
+            Nova Empresa
+          </button>
+        </header>
+
+        <section class="companies-section glass" aria-labelledby="companies-list-title">
+          <div class="companies-section__heading">
+            <h2 id="companies-list-title">Empresas cadastradas</h2>
+            <p id="companies-feedback" class="companies-feedback" role="status" aria-live="polite">Carregando empresas...</p>
+          </div>
+
+          <div class="companies-table-wrap">
+            <table class="companies-table">
+              <thead>
+                <tr>
+                  <th scope="col">Razão Social</th>
+                  <th scope="col">Nome Fantasia</th>
+                  <th scope="col">CNPJ</th>
+                  <th scope="col">Inscrição Estadual</th>
+                  <th scope="col">Qtd. Usuários</th>
+                </tr>
+              </thead>
+              <tbody id="companies-table-body">
+                <tr>
+                  <td class="companies-table__placeholder" colspan="5">Buscando dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
