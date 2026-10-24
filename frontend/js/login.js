@@ -17,11 +17,19 @@ async function fazerLogin(event) {
   event.preventDefault();
 
   const formData = new FormData(loginForm);
+<<<<<<< HEAD
   const login = String(formData.get("login") ?? "").trim();
   const senha = String(formData.get("senha") ?? "");
 
   // Verifica os campos antes de enviar qualquer requisição ao backend.
   if (!login || senha.length === 0) {
+=======
+  const login = formData.get("login");
+  const senha = formData.get("senha");
+
+  // Verifica os campos antes de enviar qualquer requisição ao backend.
+  if (!login.trim() || senha.length === 0) {
+>>>>>>> origin/main
     mostrarMensagem("Preencha o login e a senha.", "warning");
     return;
   }
@@ -53,5 +61,10 @@ async function fazerLogin(event) {
   }
 }
 
+<<<<<<< HEAD
 // O formulário trata clique e Enter pelo mesmo evento, evitando enviar duas requisições.
+=======
+// O clique chama a função diretamente; Enter continua funcionando pelo onsubmit.
+loginButton.onclick = fazerLogin;
+>>>>>>> origin/main
 loginForm.onsubmit = fazerLogin;
