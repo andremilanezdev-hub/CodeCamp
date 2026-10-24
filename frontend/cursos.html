@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciamento de Cursos | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/cursos.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/cursos.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner courses-page">
+        <header class="courses-page__header">
+          <div>
+            <p class="courses-page__eyebrow">Administração</p>
+            <h1>Gerenciamento de Cursos</h1>
+          </div>
+          <button id="new-course-button" class="courses-button" type="button">
+            <span aria-hidden="true">+</span>
+            Novo Curso
+          </button>
+        </header>
+
+        <section class="courses-section glass" aria-labelledby="courses-list-title">
+          <div class="courses-section__heading">
+            <h2 id="courses-list-title">Cursos cadastrados</h2>
+            <p id="courses-feedback" class="courses-feedback" role="status" aria-live="polite">Carregando cursos...</p>
+          </div>
+
+          <div class="courses-table-wrap">
+            <table class="courses-table">
+              <thead>
+                <tr>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Carga Horária</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Usuário que Cadastrou</th>
+                  <th scope="col">Alunos</th>
+                </tr>
+              </thead>
+              <tbody id="courses-table-body">
+                <tr>
+                  <td class="courses-table__placeholder" colspan="5">Buscando dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

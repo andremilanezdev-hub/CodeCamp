@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Início | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner">
+        <h1>Bem-vindo</h1>
+
+        <!-- Texto de exemplo para demonstrar a rolagem independente do conteúdo. -->
+        <section class="scroll-sample glass" aria-label="Conteúdo de exemplo">
+          <p>Esta é a área principal da aplicação. O menu permanece fixo enquanto este conteúdo pode ser rolado.</p>
+          <p>Use os links do menu para acessar as páginas de cursos, usuários e empresa quando elas forem criadas.</p>
+          <p>Este texto é apenas um exemplo para preencher a página e testar a rolagem do conteúdo principal.</p>
+          <p>A estrutura separa a navegação do conteúdo, facilitando a manutenção e a expansão da aplicação.</p>
+          <p>Em telas menores, o conteúdo continua rolável e o menu permanece acessível à esquerda.</p>
+          <p>Adicione aqui os componentes e informações da página inicial conforme as próximas etapas do projeto.</p>
+          <p>Este espaço adicional permite verificar que a rolagem acontece nesta coluna, sem mover a sidebar.</p>
+          <p>Quando novas páginas forem adicionadas, a classe active destacará automaticamente a página atual.</p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar | Meu Projeto</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/login.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <main class="page-shell">
+      <section class="panel login-panel glass" aria-labelledby="page-title">
+        <p class="eyebrow">Meu Projeto</p>
+        <h1 id="page-title">Acesse sua conta</h1>
+        <p class="intro">Entre com suas credenciais para continuar.</p>
+
+        <form id="login-form" novalidate>
+          <label for="login">Login</label>
+          <input id="login" name="login" type="text" autocomplete="username" required>
+
+          <label for="password">Senha</label>
+          <input id="password" name="senha" type="password" autocomplete="current-password" required>
+
+          <button id="login-button" type="submit">Entrar</button>
+          <div id="login-message" class="message" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

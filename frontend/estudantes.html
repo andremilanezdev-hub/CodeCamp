@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciamento de Estudantes | Meu Projeto</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/estudantes.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/estudantes.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span>Meu Projeto</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner students-page">
+        <header class="students-page__header">
+          <div>
+            <p class="students-page__eyebrow">Administração</p>
+            <h1>Gerenciamento de Estudantes</h1>
+          </div>
+          <button id="new-student-button" class="students-button" type="button">
+            <span aria-hidden="true">+</span>
+            Novo Estudante
+          </button>
+        </header>
+
+        <section class="students-section glass" aria-labelledby="students-list-title">
+          <div class="students-section__heading">
+            <h2 id="students-list-title">Estudantes cadastrados</h2>
+            <p id="students-feedback" class="students-feedback" role="status" aria-live="polite">Carregando estudantes...</p>
+          </div>
+          <div class="students-table-wrap">
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th scope="col">Nome</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">CPF</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Data de Cadastro</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <tr>
+                  <td class="students-table__placeholder" colspan="5">Buscando dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

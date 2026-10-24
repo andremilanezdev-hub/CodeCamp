@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciamento de Módulos | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modulos.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/modulos.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial">
+        <span class="brand__mark" aria-hidden="true">CC</span>
+        <span>CodeCamp</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner modules-page">
+        <header class="modules-page__header">
+          <div>
+            <p class="modules-page__eyebrow">Administração</p>
+            <h1>Gerenciamento de Módulos</h1>
+          </div>
+          <button id="new-module-button" class="modules-button" type="button">
+            <span aria-hidden="true">+</span>
+            Novo Módulo
+          </button>
+        </header>
+
+        <section class="modules-section glass" aria-labelledby="modules-list-title">
+          <div class="modules-section__heading">
+            <h2 id="modules-list-title">Módulos cadastrados</h2>
+            <p id="modules-feedback" class="modules-feedback" role="status" aria-live="polite">Carregando módulos...</p>
+          </div>
+          <div class="modules-table-wrap">
+            <table class="modules-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Carga Horária (h)</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Empresa</th>
+                </tr>
+              </thead>
+              <tbody id="modules-table-body">
+                <tr>
+                  <td class="modules-table__placeholder" colspan="5">Buscando dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
