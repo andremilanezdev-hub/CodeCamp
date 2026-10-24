@@ -1,10 +1,8 @@
-<<<<<<< HEAD
-// Endpoint base correspondente ao @RequestMapping("/estudante") do controller.
-const API_ESTUDANTES = "http://localhost:8080/estudante";
+import { apiRequest } from "./api.js";
 
-// Referências dos elementos usados para exibir registros, mensagens e formulários.
 const studentsTableBody = document.querySelector("#students-table-body");
 const studentsFeedback = document.querySelector("#students-feedback");
+const studentsSearchInput = document.querySelector("#students-search-input");
 const newStudentButton = document.querySelector("#new-student-button");
 const studentFormDialog = document.querySelector("#student-form-dialog");
 const studentForm = document.querySelector("#student-form");
@@ -17,92 +15,66 @@ const studentFormFeedback = document.querySelector("#student-form-feedback");
 const studentSaveButton = document.querySelector("#student-save-button");
 const studentDetailsDialog = document.querySelector("#student-details-dialog");
 
-// Destaca a página atual no menu, inclusive no caminho /estudantes/ sem extensão.
-const normalizePagePath = (path) => path.replace(/\/+$/, "").split("/").pop();
-const currentPage = normalizePagePath(window.location.pathname);
+let estudantes = [];
+
+// Marca a página atual no menu lateral.
 document.querySelectorAll(".sidebar__link").forEach((link) => {
-  if (normalizePagePath(new URL(link.href).pathname) === currentPage) {
-=======
-import { apiRequest } from "./api.js";
-
-const currentPage = window.location.pathname.split("/").pop();
-const navigationLinks = document.querySelectorAll(".sidebar__link");
-const studentsTableBody = document.querySelector("#students-table-body");
-const studentsFeedback = document.querySelector("#students-feedback");
-
-// Destaca Estudantes no menu lateral quando esta página está aberta.
-navigationLinks.forEach((link) => {
-  if (link.getAttribute("href").split("/").pop() === currentPage) {
->>>>>>> origin/main
+  if (new URL(link.href).pathname === window.location.pathname) {
     link.classList.add("active");
     link.setAttribute("aria-current", "page");
   }
 });
 
-<<<<<<< HEAD
-// Converte campos vazios ou ausentes em um marcador legível.
 function formatarValor(valor) {
   return valor === null || valor === undefined || valor === "" ? "—" : String(valor);
 }
 
-// Exibe datas ISO da API no formato local e protege contra datas inválidas.
 function formatarData(valor) {
   if (valor === null || valor === undefined || valor === "") return "—";
-  const data = new Date(valor);
+
+  let data;
+  if (Array.isArray(valor)) {
+    const [ano, mes, dia, hora = 0, minuto = 0, segundo = 0, nanos = 0] = valor;
+    data = new Date(ano, mes - 1, dia, hora, minuto, segundo, Math.floor(nanos / 1_000_000));
+  } else {
+    data = new Date(valor);
+  }
+
   if (Number.isNaN(data.getTime())) return String(valor);
   return data.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
 }
 
-// Converte códigos armazenados no banco para rótulos usados na tela.
 function normalizarStatus(status) {
-  const valor = typeof status === "string" ? status.trim().toLowerCase() : "";
-  if (valor === "a" || valor === "ativo") return { texto: "Ativo", ativo: true };
-  if (["d", "i", "inativo", "desativado"].includes(valor)) {
-    return { texto: valor === "i" || valor === "inativo" ? "Inativo" : "Desativado", ativo: false };
-  }
+  const codigo = typeof status === "string" ? status.trim().toLowerCase() : "";
+  if (codigo === "a" || codigo === "ativo") return { texto: "Ativo", ativo: true };
+  if (codigo === "d" || codigo === "desativado") return { texto: "Desativado", ativo: false };
+  if (codigo === "i" || codigo === "inativo") return { texto: "Inativo", ativo: false };
   return { texto: formatarValor(status), ativo: false };
 }
 
-// Faz chamadas JSON e acrescenta o JWT usado pelo filtro de autenticação do backend.
-async function requisitarEstudantes(path = "", { method = "GET", body } = {}) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    throw new Error("Sua sessão não foi encontrada. Entre novamente no sistema.");
-  }
-
-  const headers = {
-    Accept: "*/*",
-    Authorization: `Bearer ${token}`,
-  };
-  if (body !== undefined) headers["Content-Type"] = "application/json";
-
-  const response = await fetch(`${API_ESTUDANTES}${path}`, {
-    method,
-    headers,
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-
-  const responseText = await response.text();
-  let responseBody = null;
-  if (responseText) {
-    try {
-      responseBody = JSON.parse(responseText);
-    } catch {
-      responseBody = responseText;
-    }
-  }
-
-  if (!response.ok) {
-    const message = typeof responseBody === "object" && responseBody !== null
-      ? responseBody.mensagem || responseBody.message || responseBody.error
-      : responseBody;
-    throw new Error(message || `A API respondeu com HTTP ${response.status}.`);
-  }
-
-  return responseBody;
+function exibirFeedback(mensagem, tipo = "") {
+  studentsFeedback.textContent = mensagem;
+  studentsFeedback.classList.toggle("students-feedback--error", tipo === "erro");
 }
 
-// Cria botões de ação sem inserir dados da API como HTML executável.
+function exibirFeedbackFormulario(mensagem, tipo = "") {
+  studentFormFeedback.textContent = mensagem;
+  studentFormFeedback.classList.toggle("students-feedback--error", tipo === "erro");
+}
+
+function mensagemDeErro(error) {
+  if (error.status === 401) return "Sua sessão expirou. Entre novamente para continuar.";
+  if (error.status === 403) return "Você não tem permissão para realizar esta operação.";
+  if (error instanceof TypeError) return "Não foi possível conectar à API. Verifique se o servidor está ativo.";
+  return error.message || "Ocorreu um erro. Tente novamente.";
+}
+
+function criarCelula(valor) {
+  const cell = document.createElement("td");
+  cell.textContent = formatarValor(valor);
+  return cell;
+}
+
 function criarBotaoAcao(rotulo, acao, id, classe = "") {
   const button = document.createElement("button");
   button.type = "button";
@@ -113,120 +85,6 @@ function criarBotaoAcao(rotulo, acao, id, classe = "") {
   return button;
 }
 
-// Renderiza a tabela; valores ausentes e objetos nulos não quebram a página.
-=======
-function formatarValor(valor) {
-  return valor === null || valor === undefined || valor === "" ? "-" : String(valor);
-}
-
-function formatarData(data) {
-  if (data === null || data === undefined || data === "") return "-";
-  const dataValida = new Date(data);
-  if (Number.isNaN(dataValida.getTime())) return String(data);
-  return dataValida.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
-}
-
-function criarCelula(valor) {
-  const cell = document.createElement("td");
-  cell.textContent = formatarValor(valor);
-  return cell;
-}
-
-function criarCelulaStatus(status) {
-  const cell = document.createElement("td");
-  const badge = document.createElement("span");
-  const statusTexto = formatarValor(status);
-  const statusNormalizado = typeof status === "string" ? status.trim().toLowerCase() : "";
-
-  badge.className = "student-status";
-  if (statusNormalizado === "ativo" || statusNormalizado === "a") {
-    badge.classList.add("student-status--active");
-  } else if (statusNormalizado === "inativo" || statusNormalizado === "i") {
-    badge.classList.add("student-status--inactive");
-  }
-  badge.textContent = statusTexto;
-  cell.append(badge);
-  return cell;
-}
-
-function exibirMensagemTabela(mensagem) {
-  const row = document.createElement("tr");
-  const cell = document.createElement("td");
-  cell.className = "students-table__placeholder";
-  cell.colSpan = 5;
-  cell.textContent = mensagem;
-  row.append(cell);
-  studentsTableBody.replaceChildren(row);
-}
-
->>>>>>> origin/main
-function exibirEstudantes(estudantes) {
-  studentsTableBody.replaceChildren();
-
-  if (estudantes.length === 0) {
-<<<<<<< HEAD
-    mostrarMensagemTabela("Nenhum estudante cadastrado.");
-=======
-    exibirMensagemTabela("Nenhum estudante cadastrado.");
->>>>>>> origin/main
-    studentsFeedback.textContent = "0 estudantes";
-    return;
-  }
-
-  estudantes.forEach((estudante) => {
-    const student = estudante && typeof estudante === "object" ? estudante : {};
-    const row = document.createElement("tr");
-<<<<<<< HEAD
-    const statusCell = document.createElement("td");
-    const status = normalizarStatus(student.status);
-    const statusBadge = document.createElement("span");
-    statusBadge.className = `student-status ${status.ativo ? "student-status--active" : "student-status--inactive"}`;
-    statusBadge.textContent = status.texto;
-    statusCell.append(statusBadge);
-
-    [student.id, student.nome, student.email, student.cpf].forEach((value) => {
-      const cell = document.createElement("td");
-      cell.textContent = formatarValor(value);
-      row.append(cell);
-    });
-    row.append(statusCell);
-
-    const createdCell = document.createElement("td");
-    createdCell.textContent = formatarData(student.dataCadastro);
-    row.append(createdCell);
-
-    const actionsCell = document.createElement("td");
-    const actions = document.createElement("div");
-    actions.className = "students-table__actions";
-    if (student.id !== null && student.id !== undefined && student.id !== "") {
-      actions.append(
-        criarBotaoAcao("Ver", "details", student.id),
-        criarBotaoAcao("Editar", "edit", student.id),
-        criarBotaoAcao(status.ativo ? "Desativar" : "Ativar", "toggle-status", student.id),
-        criarBotaoAcao("Excluir", "delete", student.id, "student-action--danger"),
-      );
-    } else {
-      actions.textContent = "Ações indisponíveis";
-    }
-    actionsCell.append(actions);
-    row.append(actionsCell);
-=======
-    row.append(
-      criarCelula(student.nome),
-      criarCelula(student.email),
-      criarCelula(student.cpf),
-      criarCelulaStatus(student.status),
-      criarCelula(formatarData(student.dataCadastro)),
-    );
->>>>>>> origin/main
-    studentsTableBody.append(row);
-  });
-
-  studentsFeedback.textContent = `${estudantes.length} estudante(s)`;
-}
-
-<<<<<<< HEAD
-// Mostra uma mensagem dentro da tabela sem deixar linhas de dados antigos.
 function mostrarMensagemTabela(mensagem) {
   const row = document.createElement("tr");
   const cell = document.createElement("td");
@@ -237,161 +95,193 @@ function mostrarMensagemTabela(mensagem) {
   studentsTableBody.replaceChildren(row);
 }
 
-// GET /estudante busca a lista completa no banco por meio do EstudanteRepository.
+function exibirEstudantes() {
+  const termo = studentsSearchInput.value.trim().toLocaleLowerCase("pt-BR");
+  const filtrados = estudantes.filter((estudante) => {
+    const texto = [estudante.id, estudante.nome, estudante.email, estudante.cpf]
+      .map((valor) => String(valor ?? "").toLocaleLowerCase("pt-BR"))
+      .join(" ");
+    return texto.includes(termo);
+  });
+
+  if (filtrados.length === 0) {
+    mostrarMensagemTabela(estudantes.length === 0
+      ? "Nenhum estudante cadastrado."
+      : "Nenhum estudante corresponde à busca.");
+    studentsFeedback.textContent = estudantes.length === 0
+      ? "0 estudantes"
+      : `0 resultados de ${estudantes.length} estudantes`;
+    return;
+  }
+
+  studentsTableBody.replaceChildren();
+  filtrados.forEach((estudante) => {
+    const row = document.createElement("tr");
+    const status = normalizarStatus(estudante.status);
+    const statusCell = document.createElement("td");
+    const statusBadge = document.createElement("span");
+    statusBadge.className = `student-status ${status.ativo ? "student-status--active" : "student-status--inactive"}`;
+    statusBadge.textContent = status.texto;
+    statusCell.append(statusBadge);
+
+    row.append(
+      criarCelula(estudante.id),
+      criarCelula(estudante.nome),
+      criarCelula(estudante.email),
+      criarCelula(estudante.cpf),
+      statusCell,
+      criarCelula(formatarData(estudante.dataCadastro)),
+    );
+
+    const actionsCell = document.createElement("td");
+    const actions = document.createElement("div");
+    actions.className = "students-table__actions";
+    actions.append(
+      criarBotaoAcao("Ver", "details", estudante.id),
+      criarBotaoAcao("Editar", "edit", estudante.id),
+      status.ativo
+        ? criarBotaoAcao("Desativar", "deactivate", estudante.id, "student-action--danger")
+        : criarBotaoAcao("Ativar", "activate", estudante.id, "student-action--secondary"),
+    );
+    actionsCell.append(actions);
+    row.append(actionsCell);
+    studentsTableBody.append(row);
+  });
+
+  studentsFeedback.textContent = termo
+    ? `${filtrados.length} resultado(s) de ${estudantes.length} estudante(s)`
+    : `${estudantes.length} estudante(s)`;
+}
+
 async function carregarEstudantes() {
-  studentsFeedback.textContent = "Carregando estudantes...";
-  studentsFeedback.classList.remove("students-feedback--error");
+  exibirFeedback("Carregando estudantes...");
   mostrarMensagemTabela("Carregando estudantes...");
 
   try {
-    const estudantes = await requisitarEstudantes();
-    if (!Array.isArray(estudantes)) throw new Error("A API não retornou uma lista de estudantes.");
-    exibirEstudantes(estudantes);
-  } catch (error) {
-    mostrarMensagemTabela("Não foi possível carregar os estudantes.");
-    studentsFeedback.textContent = error.message || "Verifique a conexão com a API.";
-=======
-async function carregarEstudantes() {
-  studentsFeedback.textContent = "Carregando estudantes...";
-  studentsFeedback.classList.remove("students-feedback--error");
-
-  try {
-    // apiRequest consulta http://localhost:8080/estudante com Accept: */*.
-    const estudantes = await apiRequest("/estudante");
-    if (!Array.isArray(estudantes)) {
-      throw new Error("A resposta da API não está no formato esperado.");
+    const resposta = await apiRequest("/estudante");
+    if (!Array.isArray(resposta)) {
+      throw new Error("A API não retornou uma lista de estudantes.");
     }
-    exibirEstudantes(estudantes);
+    estudantes = resposta;
+    exibirEstudantes();
+    return true;
   } catch (error) {
-    exibirMensagemTabela("Não foi possível carregar os estudantes.");
-    studentsFeedback.textContent = error.message || "Verifique sua conexão e tente novamente.";
->>>>>>> origin/main
-    studentsFeedback.classList.add("students-feedback--error");
+    estudantes = [];
+    mostrarMensagemTabela("Não foi possível carregar os estudantes.");
+    exibirFeedback(mensagemDeErro(error), "erro");
+    return false;
   }
 }
 
-<<<<<<< HEAD
-// Limpa e abre o formulário usado pelo POST /estudante.
 function abrirNovoEstudante() {
   studentForm.reset();
   studentIdInput.value = "";
   studentFormTitle.textContent = "Novo estudante";
   studentSaveButton.textContent = "Salvar estudante";
-  studentFormFeedback.textContent = "";
-  studentFormFeedback.classList.remove("students-feedback--error");
+  exibirFeedbackFormulario("");
   studentFormDialog.showModal();
   studentNameInput.focus();
 }
 
-// GET /estudante/{id} busca os dados atuais antes de preencher a edição.
-async function editarEstudante(id) {
-  try {
-    const student = await requisitarEstudantes(`/${encodeURIComponent(id)}`);
-    studentIdInput.value = formatarValor(student.id);
-    studentNameInput.value = student.nome || "";
-    studentEmailInput.value = student.email || "";
-    studentCpfInput.value = student.cpf || "";
-    studentFormTitle.textContent = `Editar estudante #${formatarValor(student.id)}`;
-    studentSaveButton.textContent = "Salvar alterações";
-    studentFormFeedback.textContent = "";
-    studentFormFeedback.classList.remove("students-feedback--error");
-    studentFormDialog.showModal();
-  } catch (error) {
-    studentsFeedback.textContent = error.message || "Não foi possível consultar o estudante.";
-    studentsFeedback.classList.add("students-feedback--error");
-  }
-}
-
-// GET /estudante/{id} exibe todos os campos retornados pelo DTO de consulta.
 async function consultarEstudante(id) {
   try {
-    const student = await requisitarEstudantes(`/${encodeURIComponent(id)}`);
+    const estudante = await apiRequest(`/estudante/${encodeURIComponent(id)}`);
     const campos = {
-      "student-details-id": student.id,
-      "student-details-name": student.nome,
-      "student-details-email": student.email,
-      "student-details-cpf": student.cpf,
-      "student-details-status": normalizarStatus(student.status).texto,
-      "student-details-created": formatarData(student.dataCadastro),
-      "student-details-updated": formatarData(student.dataAtualizacao),
+      "student-details-id": estudante.id,
+      "student-details-name": estudante.nome,
+      "student-details-email": estudante.email,
+      "student-details-cpf": estudante.cpf,
+      "student-details-status": normalizarStatus(estudante.status).texto,
+      "student-details-created": formatarData(estudante.dataCadastro),
+      "student-details-updated": formatarData(estudante.dataAtualizacao),
     };
     Object.entries(campos).forEach(([elementId, value]) => {
       document.getElementById(elementId).textContent = formatarValor(value);
     });
     studentDetailsDialog.showModal();
   } catch (error) {
-    studentsFeedback.textContent = error.message || "Não foi possível consultar o estudante.";
-    studentsFeedback.classList.add("students-feedback--error");
+    exibirFeedback(mensagemDeErro(error), "erro");
   }
 }
 
-// PATCH /estudante/{id}/status altera o status para A ou D sem excluir o registro.
-async function alternarStatus(id, button) {
-  const desativando = button.textContent.trim().toLowerCase() === "desativar";
-  const novoStatus = desativando ? "D" : "A";
-  button.disabled = true;
-
+async function editarEstudante(id) {
   try {
-    await requisitarEstudantes(`/${encodeURIComponent(id)}/status`, {
-      method: "PATCH",
-      body: { status: novoStatus },
-    });
-    await carregarEstudantes();
+    const estudante = await apiRequest(`/estudante/${encodeURIComponent(id)}`);
+    studentIdInput.value = estudante.id ?? "";
+    studentNameInput.value = estudante.nome ?? "";
+    studentEmailInput.value = estudante.email ?? "";
+    studentCpfInput.value = estudante.cpf ?? "";
+    studentFormTitle.textContent = `Editar estudante #${formatarValor(estudante.id)}`;
+    studentSaveButton.textContent = "Salvar alterações";
+    exibirFeedbackFormulario("");
+    studentFormDialog.showModal();
+    studentNameInput.focus();
   } catch (error) {
-    studentsFeedback.textContent = error.message || "Não foi possível alterar o status.";
-    studentsFeedback.classList.add("students-feedback--error");
-    button.disabled = false;
+    exibirFeedback(mensagemDeErro(error), "erro");
   }
 }
 
-// DELETE /estudante/{id} segue o controller, que marca o registro como D.
-async function excluirEstudante(id, button) {
-  if (!window.confirm(`Deseja desativar o estudante #${id}?`)) return;
-  button.disabled = true;
-
-  try {
-    await requisitarEstudantes(`/${encodeURIComponent(id)}`, { method: "DELETE" });
-    await carregarEstudantes();
-  } catch (error) {
-    studentsFeedback.textContent = error.message || "Não foi possível excluir o estudante.";
-    studentsFeedback.classList.add("students-feedback--error");
-    button.disabled = false;
-  }
-}
-
-// POST cria estudante; PUT /estudante/{id} atualiza o estudante selecionado.
 async function salvarEstudante(event) {
   event.preventDefault();
-  studentFormFeedback.textContent = "Salvando...";
-  studentFormFeedback.classList.remove("students-feedback--error");
   studentSaveButton.disabled = true;
+  exibirFeedbackFormulario("Salvando...");
 
+  const id = studentIdInput.value;
   const dados = {
     nome: studentNameInput.value.trim(),
     email: studentEmailInput.value.trim(),
     cpf: studentCpfInput.value.trim(),
   };
-  const id = studentIdInput.value;
 
   try {
-    await requisitarEstudantes(id ? `/${encodeURIComponent(id)}` : "", {
+    const resposta = await apiRequest(id ? `/estudante/${encodeURIComponent(id)}` : "/estudante", {
       method: id ? "PUT" : "POST",
       body: dados,
     });
     studentFormDialog.close();
-    await carregarEstudantes();
+    const carregouLista = await carregarEstudantes();
+    if (carregouLista) exibirFeedback(resposta?.mensagem || "Estudante salvo com sucesso.");
   } catch (error) {
-    studentFormFeedback.textContent = error.message || "Não foi possível salvar o estudante.";
-    studentFormFeedback.classList.add("students-feedback--error");
+    exibirFeedbackFormulario(mensagemDeErro(error), "erro");
   } finally {
     studentSaveButton.disabled = false;
   }
 }
 
-// O botão abre o formulário de inclusão.
-newStudentButton.addEventListener("click", abrirNovoEstudante);
+async function alterarStatus(id, acao, button) {
+  const estudante = estudantes.find((item) => String(item.id) === String(id));
+  if (!estudante) return;
 
-// Processa as ações da tabela através de um único listener delegado.
+  if (acao === "deactivate" && !window.confirm(`Deseja desativar ${estudante.nome || `o estudante #${id}`}?`)) {
+    return;
+  }
+
+  button.disabled = true;
+  try {
+    if (acao === "deactivate") {
+      // DELETE /estudante/{id} desativa o cadastro sem removê-lo do banco.
+      await apiRequest(`/estudante/${encodeURIComponent(id)}`, { method: "DELETE" });
+      const carregouLista = await carregarEstudantes();
+      if (carregouLista) exibirFeedback("Estudante desativado.");
+    } else {
+      // PATCH /estudante/{id}/status reativa um cadastro desativado.
+      const resposta = await apiRequest(`/estudante/${encodeURIComponent(id)}/status`, {
+        method: "PATCH",
+        body: { status: "A" },
+      });
+      const carregouLista = await carregarEstudantes();
+      if (carregouLista) exibirFeedback(resposta?.mensagem || "Estudante ativado.");
+    }
+  } catch (error) {
+    exibirFeedback(mensagemDeErro(error), "erro");
+    button.disabled = false;
+  }
+}
+
+newStudentButton.addEventListener("click", abrirNovoEstudante);
+studentsSearchInput.addEventListener("input", exibirEstudantes);
+studentForm.addEventListener("submit", salvarEstudante);
+
 studentsTableBody.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
@@ -399,26 +289,19 @@ studentsTableBody.addEventListener("click", (event) => {
   const { action, id } = button.dataset;
   if (action === "details") consultarEstudante(id);
   if (action === "edit") editarEstudante(id);
-  if (action === "toggle-status") alternarStatus(id, button);
-  if (action === "delete") excluirEstudante(id, button);
+  if (action === "activate" || action === "deactivate") alterarStatus(id, action, button);
 });
 
-// Envia cadastro/edição e fecha diálogos pelos botões com data-close-dialog.
-studentForm.addEventListener("submit", salvarEstudante);
 document.querySelectorAll("[data-close-dialog]").forEach((button) => {
   button.addEventListener("click", () => {
     document.getElementById(button.dataset.closeDialog).close();
   });
 });
 
-// Fecha o diálogo ao clicar fora de seu painel.
 document.querySelectorAll("dialog").forEach((dialog) => {
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
   });
 });
 
-// Inicia a listagem assim que a página sem extensão é carregada.
-=======
->>>>>>> origin/main
 carregarEstudantes();

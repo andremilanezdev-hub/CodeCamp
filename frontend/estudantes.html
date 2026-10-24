@@ -3,18 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
-    <meta http-equiv="refresh" content="0; url=estudantes/">
-    <title>Redirecionando | CodeCamp</title>
-    <script>
-      // Mantém links antigos funcionando e direciona para a URL sem extensão.
-      window.location.replace("estudantes/");
-    </script>
-  </head>
-  <body>
-    <p>Redirecionando para <a href="estudantes/">Gerenciamento de Estudantes</a>…</p>
-=======
-    <title>Gerenciamento de Estudantes | Meu Projeto</title>
+    <title>Gerenciamento de Estudantes | CodeCamp</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/estudantes.css">
     <link rel="stylesheet" href="css/global.css">
@@ -23,16 +12,16 @@
   </head>
   <body class="gradient-bg">
     <aside class="sidebar" aria-label="Menu principal">
-      <a class="brand" href="dashboard.html" aria-label="Meu Projeto, página inicial">
-        <span class="brand__mark" aria-hidden="true">MP</span>
-        <span>Meu Projeto</span>
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial">
+        <span class="brand__mark" aria-hidden="true">CC</span>
+        <span>CodeCamp</span>
       </a>
       <nav aria-label="Navegação principal">
         <ul class="sidebar__links">
           <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
           <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
           <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
-          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="estudantes.html" aria-current="page">Estudantes</a></li>
           <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
         </ul>
       </nav>
@@ -48,29 +37,40 @@
           </div>
           <button id="new-student-button" class="students-button" type="button">
             <span aria-hidden="true">+</span>
-            Novo Estudante
+            Novo estudante
           </button>
         </header>
 
         <section class="students-section glass" aria-labelledby="students-list-title">
           <div class="students-section__heading">
-            <h2 id="students-list-title">Estudantes cadastrados</h2>
-            <p id="students-feedback" class="students-feedback" role="status" aria-live="polite">Carregando estudantes...</p>
+            <div>
+              <h2 id="students-list-title">Estudantes cadastrados</h2>
+              <p id="students-feedback" class="students-feedback" role="status" aria-live="polite">
+                Carregando estudantes...
+              </p>
+            </div>
+            <label class="students-search" for="students-search-input">
+              <span>Buscar</span>
+              <input id="students-search-input" type="search" placeholder="Nome, e-mail ou CPF" autocomplete="off">
+            </label>
           </div>
+
           <div class="students-table-wrap">
             <table class="students-table">
               <thead>
                 <tr>
+                  <th scope="col">ID</th>
                   <th scope="col">Nome</th>
                   <th scope="col">E-mail</th>
                   <th scope="col">CPF</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Data de Cadastro</th>
+                  <th scope="col">Cadastro</th>
+                  <th scope="col">Ações</th>
                 </tr>
               </thead>
               <tbody id="students-table-body">
                 <tr>
-                  <td class="students-table__placeholder" colspan="5">Buscando dados...</td>
+                  <td class="students-table__placeholder" colspan="7">Carregando estudantes...</td>
                 </tr>
               </tbody>
             </table>
@@ -78,6 +78,58 @@
         </section>
       </div>
     </main>
->>>>>>> origin/main
+
+    <dialog id="student-form-dialog" class="student-dialog glass" aria-labelledby="student-form-title">
+      <form id="student-form" class="student-dialog__content">
+        <header class="student-dialog__header">
+          <div>
+            <p class="students-page__eyebrow">Cadastro</p>
+            <h2 id="student-form-title">Novo estudante</h2>
+          </div>
+          <button class="student-dialog__close" type="button" data-close-dialog="student-form-dialog" aria-label="Fechar">×</button>
+        </header>
+
+        <input id="student-id" name="id" type="hidden">
+
+        <label for="student-name">Nome</label>
+        <input id="student-name" name="nome" type="text" autocomplete="name" maxlength="150" required>
+
+        <label for="student-email">E-mail</label>
+        <input id="student-email" name="email" type="email" autocomplete="email" maxlength="150" required>
+
+        <label for="student-cpf">CPF</label>
+        <input id="student-cpf" name="cpf" type="text" inputmode="numeric" autocomplete="off" maxlength="14" required>
+
+        <p id="student-form-feedback" class="students-feedback" role="status" aria-live="polite"></p>
+        <footer class="student-dialog__actions">
+          <button class="students-button students-button--secondary" type="button" data-close-dialog="student-form-dialog">Cancelar</button>
+          <button id="student-save-button" class="students-button" type="submit">Salvar estudante</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="student-details-dialog" class="student-dialog glass" aria-labelledby="student-details-title">
+      <section class="student-dialog__content">
+        <header class="student-dialog__header">
+          <div>
+            <p class="students-page__eyebrow">Consulta</p>
+            <h2 id="student-details-title">Dados do estudante</h2>
+          </div>
+          <button class="student-dialog__close" type="button" data-close-dialog="student-details-dialog" aria-label="Fechar">×</button>
+        </header>
+        <dl class="student-details">
+          <div><dt>ID</dt><dd id="student-details-id">—</dd></div>
+          <div><dt>Nome</dt><dd id="student-details-name">—</dd></div>
+          <div><dt>E-mail</dt><dd id="student-details-email">—</dd></div>
+          <div><dt>CPF</dt><dd id="student-details-cpf">—</dd></div>
+          <div><dt>Status</dt><dd id="student-details-status">—</dd></div>
+          <div><dt>Data de cadastro</dt><dd id="student-details-created">—</dd></div>
+          <div><dt>Data de atualização</dt><dd id="student-details-updated">—</dd></div>
+        </dl>
+        <footer class="student-dialog__actions">
+          <button class="students-button" type="button" data-close-dialog="student-details-dialog">Fechar</button>
+        </footer>
+      </section>
+    </dialog>
   </body>
 </html>

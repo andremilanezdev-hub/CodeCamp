@@ -3,11 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
+    <meta name="theme-color" content="#071329">
     <title>Entrar | CodeCamp</title>
-=======
-    <title>Entrar | Meu Projeto</title>
->>>>>>> origin/main
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/global.css">
     <script type="module" src="js/login.js"></script>
@@ -15,28 +12,43 @@
   <body class="gradient-bg">
     <main class="page-shell">
       <section class="panel login-panel glass" aria-labelledby="page-title">
-<<<<<<< HEAD
-        <p class="eyebrow">CodeCamp</p>
-=======
-        <p class="eyebrow">Meu Projeto</p>
->>>>>>> origin/main
+        <div class="brand-lockup" aria-label="CodeCamp">
+          <span class="brand-mark" aria-hidden="true">CC</span>
+          <span class="eyebrow">CodeCamp</span>
+        </div>
+
         <h1 id="page-title">Acesse sua conta</h1>
-        <p class="intro">Entre com suas credenciais para continuar.</p>
+        <p class="intro">Entre com seu CPF e sua senha para continuar.</p>
 
         <form id="login-form" novalidate>
-<<<<<<< HEAD
           <label for="login">CPF</label>
-          <input id="login" name="login" type="text" inputmode="numeric" autocomplete="username" placeholder="Digite seu CPF" required>
-=======
-          <label for="login">Login</label>
-          <input id="login" name="login" type="text" autocomplete="username" required>
->>>>>>> origin/main
+          <input
+            id="login"
+            name="login"
+            type="text"
+            inputmode="numeric"
+            autocomplete="username"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="Digite seu CPF"
+            aria-describedby="login-hint login-message"
+            required
+          >
+          <small id="login-hint" class="login-hint">Use o CPF cadastrado na plataforma.</small>
 
           <label for="password">Senha</label>
-          <input id="password" name="senha" type="password" autocomplete="current-password" required>
+          <input
+            id="password"
+            name="senha"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Digite sua senha"
+            aria-describedby="login-message"
+            required
+          >
 
           <button id="login-button" type="submit">Entrar</button>
-          <div id="login-message" class="message" role="status" aria-live="polite"></div>
+          <p id="login-message" class="message" role="status" aria-live="polite"></p>
         </form>
       </section>
     </main>
