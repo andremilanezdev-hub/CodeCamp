@@ -1,7 +1,6 @@
 package com.example.codecamp.DTO;
 
 import com.example.codecamp.entities.Curso;
-import com.example.codecamp.entities.Usuario;
 
 import java.util.List;
 

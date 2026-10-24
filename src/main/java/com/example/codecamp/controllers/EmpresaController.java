@@ -6,7 +6,6 @@ import com.example.codecamp.DTO.EmpresaRequest;
 import com.example.codecamp.DTO.EmpresaResponse;
 import com.example.codecamp.DTO.UsuarioConsultaResponse;
 import com.example.codecamp.entities.Empresa;
-import com.example.codecamp.entities.Usuario;
 import com.example.codecamp.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
