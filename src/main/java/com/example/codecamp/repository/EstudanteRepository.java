@@ -2,7 +2,6 @@ package com.example.codecamp.repository;
 
 
 import com.example.codecamp.entities.Estudante;
-import com.example.codecamp.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

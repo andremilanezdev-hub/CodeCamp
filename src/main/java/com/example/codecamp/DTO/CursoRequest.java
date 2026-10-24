@@ -1,7 +1,6 @@
 package com.example.codecamp.DTO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class CursoRequest {
 
@@ -13,6 +12,8 @@ public class CursoRequest {
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
+    // ID do instrutor que está criando o curso (identidade simulada nesta etapa).
+    private Long usuario_id;
 
 
 
@@ -62,5 +63,13 @@ public class CursoRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getUsuario_id() {
+        return usuario_id;
+    }
+
+    public void setUsuario_id(Long usuario_id) {
+        this.usuario_id = usuario_id;
     }
 }

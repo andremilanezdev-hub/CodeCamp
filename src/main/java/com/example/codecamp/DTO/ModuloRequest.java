@@ -8,6 +8,9 @@ public class ModuloRequest {
     private String nome;
     private int cargahoraria;
     private Long empresa_id;
+    // Curso e instrutor enviados para associar o novo módulo.
+    private Long curso_id;
+    private Long usuario_id;
 
 
 
@@ -18,6 +21,22 @@ public class ModuloRequest {
 
     public void setEmpresa_id(Long empresa_id) {
         this.empresa_id = empresa_id;
+    }
+
+    public Long getCurso_id() {
+        return curso_id;
+    }
+
+    public void setCurso_id(Long curso_id) {
+        this.curso_id = curso_id;
+    }
+
+    public Long getUsuario_id() {
+        return usuario_id;
+    }
+
+    public void setUsuario_id(Long usuario_id) {
+        this.usuario_id = usuario_id;
     }
 
     public Long getId() {
