@@ -11,7 +11,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Objects;
 
-// Valida o ID de instrutor enviado pela requisição contra os vínculos persistidos no banco.
+/**
+ * Centraliza as verificações de identidade e propriedade usadas por cursos, módulos e matrículas.
+ * A permissão é calculada a partir do vínculo persistido no banco e do CPF do JWT validado pelo filtro;
+ * assim, o ID informado no corpo da requisição nunca é tratado isoladamente como prova de identidade.
+ */
 @Service
 public class InstrutorPermissaoService {
 
@@ -21,17 +25,28 @@ public class InstrutorPermissaoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Confere se o usuario_id informado pertence ao CPF autenticado pelo filtro JWT.
+    /**
+     * Retorna o usuário que atua como instrutor somente quando o ID solicitado corresponde
+     * ao CPF extraído do token. A consulta é somente leitura, por isso a transação é marcada readOnly.
+     */
     @Transactional(readOnly = true)
     public Usuario buscarInstrutor(Long usuarioId, String cpfAutenticado) {
-        if (usuarioId == null) {
+        if (usuarioId == null || usuarioId <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe o usuario_id do instrutor");
         }
+        if (cpfAutenticado == null || cpfAutenticado.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token sem usuário associado");
+        }
+
+        // Recupera o registro indicado pelo cliente para conferir sua existência e estado persistido.
         Usuario instrutor = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Instrutor não encontrado"));
 
+        // O CPF vem do subject do JWT validado, não do corpo enviado pelo cliente.
         Usuario usuarioDoToken = usuarioRepository.getUsuarioByCpf(cpfAutenticado)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário do token não encontrado"));
+
+        // Comparar chaves primárias evita depender de igualdade por referência entre entidades JPA.
         if (!Objects.equals(instrutor.getId(), usuarioDoToken.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Acesso negado: usuario_id não corresponde ao usuário autenticado");
@@ -39,7 +54,10 @@ public class InstrutorPermissaoService {
         return instrutor;
     }
 
-    // Só permite operar no curso quando o ID recebido corresponde ao seu criador.
+    /**
+     * Aplica a regra de negócio de propriedade do curso: somente o instrutor que o cadastrou
+     * pode realizar operações que dependem dessa propriedade, inclusive matricular estudantes.
+     */
     @Transactional(readOnly = true)
     public void validarPropriedadeDoCurso(Curso curso, Long usuarioId, String cpfAutenticado) {
         Usuario instrutor = buscarInstrutor(usuarioId, cpfAutenticado);
@@ -50,7 +68,10 @@ public class InstrutorPermissaoService {
         }
     }
 
-    // Só permite alterar o módulo quando ele e seu curso pertencem ao instrutor informado.
+    /**
+     * Mantém a mesma regra de propriedade para módulos, que devem pertencer ao instrutor responsável
+     * tanto pelo próprio módulo quanto pelo curso ao qual estão vinculados.
+     */
     @Transactional(readOnly = true)
     public void validarPropriedadeDoModulo(Modulo modulo, Long usuarioId, String cpfAutenticado) {
         Usuario instrutor = buscarInstrutor(usuarioId, cpfAutenticado);

@@ -11,6 +11,12 @@ import java.util.Optional;
 @Repository
 public interface ModuloRepository extends JpaRepository<Modulo,Long> {
 
+    /**
+     * Busca somente os módulos associados ao curso informado, navegando pela propriedade
+     * Modulo.curso sem montar SQL manual; Spring Data traduz o método em consulta JPA.
+     */
+    List<Modulo> findAllByCurso_Id(Long cursoId);
+
     //Retorna um registro
     Optional<Modulo> getModuloByNome(String nome);
     Optional<Modulo> getMOduloById(Long id);

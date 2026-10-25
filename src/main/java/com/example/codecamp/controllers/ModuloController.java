@@ -1,13 +1,13 @@
 package com.example.codecamp.controllers;
 
 import com.example.codecamp.DTO.AtualizaStatusModuloRequest;
+import com.example.codecamp.DTO.ModuloConsultaResponse;
 import com.example.codecamp.DTO.ModuloRequest;
 import com.example.codecamp.DTO.ModuloResponse;
-import com.example.codecamp.entities.Curso;
 import com.example.codecamp.entities.Modulo;
 import com.example.codecamp.service.InstrutorPermissaoService;
-import com.example.codecamp.repository.CursoRepository;
 import com.example.codecamp.repository.ModuloRepository;
+import com.example.codecamp.service.ModuloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,50 +24,39 @@ public class ModuloController {
     @Autowired
     private ModuloRepository moduloRepository;
     @Autowired
-    private CursoRepository cursoRepository;
+    private ModuloService moduloService;
     @Autowired
     private InstrutorPermissaoService instrutorPermissaoService;
 
     //Lista todos os cursos
     @GetMapping
-    public List<Modulo> ConsultaModulo() {
-        return moduloRepository.findAll();
+    public List<ModuloConsultaResponse> ConsultaModulo() {
+        return moduloService.listarTodos();
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Modulo> ConsultaMOduloPorID(@PathVariable Long id){
-        var modulo = moduloRepository.findById(id).orElse(null);
-        if (modulo == null){
+    public ResponseEntity<ModuloConsultaResponse> ConsultaMOduloPorID(@PathVariable Long id){
+        var modulo = moduloService.buscarPorId(id);
+        if (modulo.isEmpty()){
             return ResponseEntity.notFound().build();
         }
-        return  ResponseEntity.ok(modulo);
+        return ResponseEntity.ok(modulo.get());
+    }
+
+    /** Rota alternativa dentro do recurso módulo para consultar um curso específico. */
+    @GetMapping("/curso/{cursoId}")
+    public List<ModuloConsultaResponse> listarPorCurso(@PathVariable Long cursoId) {
+        return moduloService.listarPorCurso(cursoId);
     }
     //Cadastro curso
     @PostMapping
     public ResponseEntity<ModuloResponse>CadastrarModulo(@RequestBody ModuloRequest moduloRequest,
                                                            @RequestAttribute("usuarioAutenticadoCpf") String cpfAutenticado){
-        if (moduloRequest.getCurso_id() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        Curso curso = cursoRepository.findById(moduloRequest.getCurso_id()).orElse(null);
-        if (curso == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        instrutorPermissaoService.validarPropriedadeDoCurso(
-                curso, moduloRequest.getUsuario_id(), cpfAutenticado);
-
-        Modulo modulo = new Modulo();
-        modulo.setNome(moduloRequest.getNome());
-        modulo.setCargahoraria((long) moduloRequest.getCargahoraria());
-        modulo.setCurso(curso);
-        modulo.setUsuarioCadastro(instrutorPermissaoService.buscarInstrutor(
-                moduloRequest.getUsuario_id(), cpfAutenticado));
-        modulo.setDataCadastro(LocalDateTime.now());
-        modulo.setStatus("A");
-        //Salva no Banco
-        moduloRepository.save(modulo);
+        // Mantém o endpoint legado /modulo; o curso informado no DTO passa pelo mesmo serviço
+        // e pelas mesmas validações usadas pela rota aninhada em CursoController.
+        Modulo modulo = moduloService.cadastrar(
+                moduloRequest.getCurso_id(), moduloRequest, cpfAutenticado);
         return ResponseEntity.ok(new ModuloResponse(modulo.getId(),
                 "Modulo Cadastrado com sucesso!"));
     }

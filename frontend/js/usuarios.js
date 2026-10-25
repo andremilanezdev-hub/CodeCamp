@@ -33,6 +33,8 @@ function obterNomeEmpresa(usuario) {
     return empresa;
   }
 
+  if (usuario.razaosocialEmprea) return usuario.razaosocialEmprea;
+
   if (!empresa || typeof empresa !== "object") {
     return "Não informado";
   }
@@ -40,18 +42,11 @@ function obterNomeEmpresa(usuario) {
   return empresa.razaoSocial || empresa.nomeFantasia || "Não informado";
 }
 
-function obterClasseStatus(status) {
-  const valor = status?.trim().toLowerCase();
-
-  if (valor === "ativo") {
-    return "status-badge status-badge--active";
-  }
-
-  if (valor === "inativo") {
-    return "status-badge status-badge--inactive";
-  }
-
-  return "status-badge";
+function obterStatus(status) {
+  const valor = String(status ?? "").trim().toUpperCase();
+  if (valor === "A") return { texto: "Ativo", ativo: true };
+  if (valor === "D" || valor === "I") return { texto: valor === "D" ? "Desativado" : "Inativo", ativo: false };
+  return { texto: "Não informado", ativo: false };
 }
 
 function exibirUsuarios(usuarios) {
@@ -60,7 +55,7 @@ function exibirUsuarios(usuarios) {
   if (usuarios.length === 0) {
     const row = document.createElement("tr");
     const cell = criarCelula("Nenhum usuário cadastrado.");
-    cell.colSpan = 4;
+    cell.colSpan = 6;
     cell.classList.add("users-table__placeholder");
     row.append(cell);
     usersTableBody.append(row);
@@ -70,19 +65,35 @@ function exibirUsuarios(usuarios) {
 
   usuarios.forEach((usuario) => {
     const row = document.createElement("tr");
+    const status = obterStatus(usuario.status);
     const statusCell = document.createElement("td");
     const statusBadge = document.createElement("span");
-    const status = usuario.status || "Não informado";
+    statusBadge.className = `status-badge ${status.ativo ? "status-badge--active" : "status-badge--inactive"}`;
+    statusBadge.textContent = status.texto;
+    statusCell.append(statusBadge);
 
     row.append(
       criarCelula(usuario.nome),
       criarCelula(usuario.cpf),
+      criarCelula(usuario.dataNascimento),
+      criarCelula(obterNomeEmpresa(usuario)),
+      statusCell,
     );
 
-    statusBadge.className = obterClasseStatus(usuario.status);
-    statusBadge.textContent = status;
-    statusCell.append(statusBadge);
-    row.append(statusCell, criarCelula(obterNomeEmpresa(usuario)));
+    const actionsCell = document.createElement("td");
+    const editLink = document.createElement("a");
+    editLink.className = "user-action";
+    editLink.href = `usuario-cadastro.html?id=${encodeURIComponent(usuario.id)}`;
+    editLink.textContent = "Editar";
+    actionsCell.append(editLink);
+
+    const statusButton = document.createElement("button");
+    statusButton.type = "button";
+    statusButton.className = `user-action ${status.ativo ? "user-action--danger" : "user-action--secondary"}`;
+    statusButton.textContent = status.ativo ? "Desativar" : "Ativar";
+    statusButton.addEventListener("click", () => alterarStatusUsuario(usuario, statusButton, status.ativo));
+    actionsCell.append(statusButton);
+    row.append(actionsCell);
     usersTableBody.append(row);
   });
 
@@ -109,12 +120,34 @@ async function carregarUsuarios() {
     usersTableBody.replaceChildren();
     const row = document.createElement("tr");
     const cell = criarCelula("Não foi possível carregar os usuários.");
-    cell.colSpan = 4;
+    cell.colSpan = 6;
     cell.classList.add("users-table__placeholder");
     row.append(cell);
     usersTableBody.append(row);
     usersFeedback.textContent = error.message || "Erro ao carregar os dados.";
     usersFeedback.classList.add("users-feedback--error");
+  }
+}
+
+async function alterarStatusUsuario(usuario, button, estaAtivo) {
+  const acao = estaAtivo ? "desativar" : "ativar";
+  if (estaAtivo && !window.confirm(`Deseja desativar o usuário “${usuario.nome}”?`)) return;
+  button.disabled = true;
+  try {
+    if (estaAtivo) {
+      // DELETE do controller é uma desativação lógica, sem remover o registro.
+      await apiRequest(`/usuarios/${encodeURIComponent(usuario.id)}`, { method: "DELETE" });
+    } else {
+      await apiRequest(`/usuarios/${encodeURIComponent(usuario.id)}/status`, {
+        method: "PATCH",
+        body: { status: "A" },
+      });
+    }
+    await carregarUsuarios();
+  } catch (error) {
+    usersFeedback.textContent = error.message || `Não foi possível ${acao} o usuário.`;
+    usersFeedback.classList.add("users-feedback--error");
+    button.disabled = false;
   }
 }
 

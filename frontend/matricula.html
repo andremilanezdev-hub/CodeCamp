@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Matrículas | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/matricula.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/matricula.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial">
+        <span class="brand__mark" aria-hidden="true">CC</span>
+        <span>CodeCamp</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="matricula.html" aria-current="page">Matrículas</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+          <li><a class="sidebar__link" href="enderecos.html">Consultar CEP</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner enrollment-page">
+        <header class="enrollment-header">
+          <p class="enrollment-eyebrow">Gestão acadêmica</p>
+          <h1>Matrícula de estudante</h1>
+          <p>Associe um estudante a um curso cadastrado por você.</p>
+        </header>
+
+        <section class="enrollment-card glass" aria-labelledby="enrollment-form-title">
+          <div class="enrollment-card__heading">
+            <h2 id="enrollment-form-title">Nova matrícula</h2>
+            <p>Selecione o curso e o estudante para concluir a matrícula.</p>
+          </div>
+
+          <form id="enrollment-form" class="enrollment-form">
+            <input id="instructor-id" name="usuario_id" type="hidden">
+
+            <div class="enrollment-field">
+              <label for="course-id">Curso</label>
+              <select id="course-id" name="curso_id" required disabled>
+                <option value="">Carregando cursos...</option>
+              </select>
+              <small id="course-help">A lista mostra somente cursos cadastrados por você.</small>
+            </div>
+
+            <div class="enrollment-field">
+              <label for="student-id">Estudante</label>
+              <select id="student-id" name="estudante_id" required disabled>
+                <option value="">Selecione primeiro um curso</option>
+              </select>
+              <small id="student-help">Estudantes já matriculados no curso não aparecem nesta lista.</small>
+            </div>
+
+            <div class="enrollment-actions">
+              <button id="enrollment-submit" class="enrollment-button" type="submit" disabled>
+                Confirmar matrícula
+              </button>
+              <p id="enrollment-feedback" class="enrollment-feedback" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

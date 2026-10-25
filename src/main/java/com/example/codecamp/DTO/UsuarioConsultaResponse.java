@@ -15,6 +15,7 @@ public class UsuarioConsultaResponse {
         this.cpf = usuario.getCpf();
         this.dataNascimento = usuario.getDataNascimento();
         this.id = usuario.getId();
+        this.status = usuario.getStatus();
         // A associação pode ser nula caso o usuário não esteja vinculado a uma empresa.
         if (usuario.getEmpresa() != null){
             this.empresa_id = usuario.getEmpresa().getId();
@@ -31,6 +32,7 @@ public class UsuarioConsultaResponse {
     // Razão social da empresa associada ao usuário.
     private String razaoSocialEmprea;
     private Long id;
+    private String status;
 
     public Long getId() {
         return id;
@@ -38,6 +40,14 @@ public class UsuarioConsultaResponse {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getNome() {

@@ -1,15 +1,21 @@
 package com.example.codecamp.DTO;
 
+/**
+ * Dados necessários para solicitar uma matrícula pela API.
+ * Este DTO mantém entidades JPA fora do contrato HTTP e segue a convenção existente do projeto
+ * de receber os identificadores em snake_case.
+ */
 public class MatriculaRequest {
 
     public MatriculaRequest() {
+        // Construtor vazio exigido pelo Jackson para converter o JSON recebido em objeto Java.
     }
 
-    // ID do instrutor informado para a validação da matrícula.
+    // ID do instrutor declarado pelo cliente; o serviço compara esse ID com o usuário do JWT.
     private Long usuario_id;
-    // ID do estudante que será matriculado.
+    // ID do estudante que será associado ao curso.
     private Long estudante_id;
-    // ID do curso de destino.
+    // ID do curso de destino; o serviço confirma que pertence ao instrutor autenticado.
     private Long curso_id;
 
     public Long getUsuario_id() {

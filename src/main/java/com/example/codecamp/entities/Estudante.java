@@ -1,6 +1,8 @@
 package com.example.codecamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,13 +49,17 @@ public class Estudante {
     // Situação do cadastro, por exemplo ativo (A) ou desativado (D).
     private String status;
 
-    // Cursos em que o estudante está matriculado; esta entidade controla a tabela de junção.
-    @ManyToMany
+    // Cursos em que o estudante está matriculado. Este é o lado proprietário da relação N:M,
+    // portanto JPA grava as associações na tabela Estudante_cursos a partir desta coleção.
+    // FetchType.LAZY evita carregar todos os cursos em consultas que retornam apenas os dados pessoais.
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "Estudante_cursos",
             joinColumns = @JoinColumn(name = "estudante_id"),
             inverseJoinColumns = @JoinColumn(name = "curso_id")
     )
+    // Evita recursão JSON Estudante -> Curso -> Estudante. Os DTOs de consulta expõem os dados necessários.
+    @JsonIgnore
     private Set<Curso> cursos = new HashSet<>();
 
     public Set<Curso> getCursos() {
@@ -62,6 +68,20 @@ public class Estudante {
 
     public void setCursos(Set<Curso> cursos) {
         this.cursos = cursos;
+    }
+
+    /**
+     * Matricula este estudante em um curso mantendo os dois lados da associação em memória.
+     * A relação é N:M porque cada estudante pode ter vários cursos e cada curso pode ter vários estudantes.
+     * O lado proprietário é esta coleção; a atualização do conjunto inverso evita respostas inconsistentes
+     * durante a mesma transação, sem criar uma entidade de matrícula que não tenha dados próprios.
+     */
+    public void matricularEm(Curso curso) {
+        if (curso == null) {
+            throw new IllegalArgumentException("O curso da matrícula é obrigatório");
+        }
+        this.cursos.add(curso);
+        curso.getEstudantes().add(this);
     }
 
     // Retorna a situação atual do cadastro.

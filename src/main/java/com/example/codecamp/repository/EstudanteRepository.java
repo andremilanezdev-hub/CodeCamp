@@ -12,6 +12,13 @@ import java.util.Optional;
 // Oferece operações de persistência e consulta para a entidade Estudante.
 public interface EstudanteRepository extends JpaRepository<Estudante,Long> {
 
+    /**
+     * Consulta se a tabela de junção já contém o par estudante-curso.
+     * O método derivado mantém a regra de persistência no repositório existente da entidade proprietária,
+     * sem criar um MatriculaRepository para uma associação N:M que não possui entidade própria.
+     */
+    boolean existsByIdAndCursos_Id(Long estudanteId, Long cursoId);
+
     // Busca um estudante pelo ID; retorna Optional vazio quando não há correspondência.
     Optional<Estudante> getEstudanteById(Long id);
 

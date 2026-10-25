@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Novo Módulo | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modulo-cadastro.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/modulo-cadastro.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial"><span class="brand__mark" aria-hidden="true">CC</span><span>CodeCamp</span></a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+          <li><a class="sidebar__link" href="enderecos.html">Consultar CEP</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+    <main class="main-content">
+      <div class="main-content__inner catalog-form-page">
+        <header class="catalog-form-header">
+            <div><p class="catalog-form-eyebrow">Administração</p><h1 id="module-page-title">Novo Módulo</h1></div>
+          <a href="modulos.html">Voltar para módulos</a>
+        </header>
+        <section class="catalog-form-card glass" aria-labelledby="module-form-title">
+          <div class="catalog-form-card__heading"><h2 id="module-form-title">Dados do módulo</h2><p>Escolha um curso cadastrado por você para vincular o módulo.</p></div>
+          <form id="module-form" class="catalog-form">
+            <input id="module-instructor-id" type="hidden">
+            <input id="module-id" type="hidden">
+            <div class="catalog-field catalog-field--wide"><label for="module-course">Curso</label><select id="module-course" name="curso_id" required disabled><option value="">Carregando cursos...</option></select></div>
+            <div class="catalog-field catalog-field--wide"><label for="module-name">Nome do módulo</label><input id="module-name" name="nome" type="text" maxlength="150" required></div>
+            <div class="catalog-field"><label for="module-hours">Carga horária (horas)</label><input id="module-hours" name="cargahoraria" type="number" min="1" step="1" required></div>
+            <p id="module-form-message" class="catalog-form-message" role="status" aria-live="polite">Carregando cursos...</p>
+            <div class="catalog-form-actions"><a href="modulos.html">Cancelar</a><button id="module-save-button" type="submit" disabled>Salvar módulo</button></div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

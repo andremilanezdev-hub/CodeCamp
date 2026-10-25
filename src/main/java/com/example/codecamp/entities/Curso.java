@@ -1,5 +1,6 @@
 package com.example.codecamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -28,17 +29,30 @@ public class Curso {
 
 
 
-    //Lista de alunos sem ficar recriando os itens, apenas será alterado um registro sem ipactar quqlquer outro registro
+    // Relacionamento legado entre usuários e cursos, mantido para compatibilidade com dados e respostas existentes.
+    // As matrículas do domínio Estudante são persistidas pela relação estudantes/cursos abaixo.
     @ManyToMany(mappedBy = "cursos")
+    @JsonIgnore
     private Set<Usuario> alunos = new HashSet<>();
 
-    // Estudantes matriculados; a tabela de junção é controlada por Estudante.cursos.
+    // Lado inverso da matrícula N:M; Estudante.cursos controla a tabela de junção.
+    // JsonIgnore evita ciclos quando a entidade Curso é serializada diretamente pela API.
     @ManyToMany(mappedBy = "cursos")
+    @JsonIgnore
     private Set<Estudante> estudantes = new HashSet<>();
-    // Instrutor responsável pelo curso; um instrutor pode criar vários cursos.
+
+    // Lado inverso da relação 1:N Curso-Módulo. A chave estrangeira curso_id fica em Modulo,
+    // que é o lado proprietário; não há cascade para evitar apagar módulos automaticamente
+    // quando uma operação sobre o curso não pretende removê-los.
+    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Modulo> modulos = new HashSet<>();
+
+    // Lado proprietário da relação 1:N: cada curso aponta para o instrutor que o cadastrou.
+    // A chave estrangeira usuariocadastro_id fica na tabela de cursos.
     @ManyToOne
     @JoinColumn(name = "usuariocadastro_id")
-    private  Usuario usuarioCadastro;
+    private Usuario usuarioCadastro;
 
 
     //Get and Seters
@@ -109,16 +123,17 @@ public class Curso {
     }
 
 
-    //Adicionar aluno
+    // Mantém os dois lados da relação legada Usuario-Curso coerentes em memória.
     public void adicionarUsuario(Usuario usuario){
         this.alunos.add(usuario);
         usuario.getCursos().add(this);
     }
 
-    // Associa o estudante ao curso nos dois lados do relacionamento.
+    // Associa um estudante à matrícula nos dois lados da relação N:M.
+    // O método é mantido como conveniência para chamadas existentes; a tabela é persistida
+    // pelo lado proprietário Estudante.cursos.
     public void adicionarEstudante(Estudante estudante) {
-        this.estudantes.add(estudante);
-        estudante.getCursos().add(this);
+        estudante.matricularEm(this);
     }
 
     public Set<Estudante> getEstudantes() {
@@ -127,5 +142,25 @@ public class Curso {
 
     public void setEstudantes(Set<Estudante> estudantes) {
         this.estudantes = estudantes;
+    }
+
+    public Set<Modulo> getModulos() {
+        return modulos;
+    }
+
+    public void setModulos(Set<Modulo> modulos) {
+        this.modulos = modulos;
+    }
+
+    /**
+     * Mantém a coleção inversa sincronizada ao associar um módulo a este curso.
+     * O vínculo que persiste no banco é gravado pelo campo Modulo.curso, evitando duplicar
+     * a definição da chave estrangeira nos dois lados do relacionamento JPA.
+     */
+    public void adicionarModulo(Modulo modulo) {
+        if (modulo == null) {
+            throw new IllegalArgumentException("O módulo é obrigatório");
+        }
+        modulo.setCurso(this);
     }
 }

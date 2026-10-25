@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Consultar CEP | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/enderecos.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/enderecos.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial"><span class="brand__mark" aria-hidden="true">CC</span><span>CodeCamp</span></a>
+      <nav aria-label="Navegação principal"><ul class="sidebar__links">
+        <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+        <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+        <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+        <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+        <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
+        <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+        <li><a class="sidebar__link active" href="enderecos.html" aria-current="page">Consultar CEP</a></li>
+      </ul></nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+    <main class="main-content"><div class="main-content__inner address-page">
+      <header class="address-header"><p>Consulta de endereço</p><h1>Buscar por CEP</h1></header>
+      <section class="address-card glass" aria-labelledby="address-form-title">
+        <h2 id="address-form-title">Informe o CEP</h2>
+        <form id="address-form" class="address-form">
+          <label for="address-cep">CEP</label>
+          <div class="address-form__row"><input id="address-cep" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required><button id="address-search-button" type="submit">Consultar</button></div>
+          <p id="address-feedback" role="status" aria-live="polite"></p>
+        </form>
+        <dl id="address-result" class="address-result" hidden>
+          <div><dt>Logradouro</dt><dd data-address="logradouro">—</dd></div>
+          <div><dt>Complemento</dt><dd data-address="complemento">—</dd></div>
+          <div><dt>Bairro</dt><dd data-address="bairro">—</dd></div>
+          <div><dt>Localidade</dt><dd data-address="localidade">—</dd></div>
+          <div><dt>UF</dt><dd data-address="uf">—</dd></div>
+          <div><dt>DDD</dt><dd data-address="ddd">—</dd></div>
+        </dl>
+      </section>
+    </div></main>
+  </body>
+</html>

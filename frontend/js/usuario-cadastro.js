@@ -5,10 +5,14 @@ const nameInput = document.querySelector("#user-name");
 const cpfInput = document.querySelector("#user-cpf");
 const birthDateInput = document.querySelector("#user-birth-date");
 const passwordInput = document.querySelector("#user-password");
+const userIdInput = document.querySelector("#user-id");
 const companySelect = document.querySelector("#user-company");
 const companyHelp = document.querySelector("#company-help");
 const message = document.querySelector("#user-form-message");
 const saveButton = document.querySelector("#save-user-button");
+const pageTitle = document.querySelector("#user-page-title");
+const passwordHelp = document.querySelector("#password-help");
+const requestedUserId = new URLSearchParams(window.location.search).get("id");
 
 // Destaca Usuários no menu mesmo nesta tela secundária de cadastro.
 document.querySelectorAll(".sidebar__link").forEach((link) => {
@@ -62,10 +66,35 @@ async function carregarEmpresas() {
     companySelect.disabled = false;
     saveButton.disabled = false;
     companyHelp.textContent = "";
+    if (requestedUserId) await carregarUsuarioParaEdicao();
   } catch (error) {
     companySelect.replaceChildren(new Option("Erro ao carregar empresas", ""));
     companyHelp.textContent = "Não foi possível carregar as empresas. Atualize a página para tentar novamente.";
     mostrarMensagem(error.message || "Falha ao carregar empresas.", "error");
+  }
+}
+
+async function carregarUsuarioParaEdicao() {
+  try {
+    // A listagem usa UsuarioConsultaResponse, que fornece os campos editáveis sem devolver a senha.
+    const resposta = await apiRequest("/usuarios");
+    const usuarios = Array.isArray(resposta) ? resposta : [];
+    const usuario = usuarios.find((item) => String(item.id) === String(requestedUserId));
+    if (!usuario) throw new Error("Usuário não encontrado.");
+
+    userIdInput.value = usuario.id;
+    nameInput.value = usuario.nome ?? "";
+    cpfInput.value = usuario.cpf ?? "";
+    birthDateInput.value = String(usuario.dataNascimento ?? "").slice(0, 10);
+    companySelect.value = String(usuario.empresa_id ?? "");
+    pageTitle.textContent = `Editar usuário #${usuario.id}`;
+    document.querySelector("#user-form-title").textContent = "Atualizar dados do usuário";
+    passwordInput.required = false;
+    passwordHelp.textContent = "Deixe vazia para manter a senha atual ou informe uma nova senha.";
+    saveButton.textContent = "Salvar alterações";
+  } catch (error) {
+    mostrarMensagem(error.message || "Não foi possível carregar o usuário.", "error");
+    saveButton.disabled = true;
   }
 }
 
@@ -74,7 +103,6 @@ function validarFormulario() {
     [nameInput, "Informe o nome."],
     [cpfInput, "Informe o CPF."],
     [birthDateInput, "Informe a data de nascimento."],
-    [passwordInput, "Informe a senha."],
     [companySelect, "Selecione uma empresa."],
   ];
 
@@ -91,6 +119,12 @@ function validarFormulario() {
     return false;
   }
 
+  if (!userIdInput.value && !passwordInput.value.trim()) {
+    mostrarMensagem("Informe a senha para o novo usuário.", "error");
+    passwordInput.focus();
+    return false;
+  }
+
   return true;
 }
 
@@ -101,6 +135,7 @@ async function cadastrarUsuario(event) {
 
   saveButton.disabled = true;
   saveButton.textContent = "Salvando...";
+  const id = userIdInput.value;
   const dadosUsuario = {
     nome: nameInput.value.trim(),
     cpf: cpfInput.value.trim(),
@@ -110,16 +145,16 @@ async function cadastrarUsuario(event) {
   };
 
   try {
-    const resposta = await apiRequest("/usuarios", {
-      method: "POST",
+    const resposta = await apiRequest(id ? `/usuarios/${encodeURIComponent(id)}` : "/usuarios", {
+      method: id ? "PUT" : "POST",
       body: dadosUsuario,
     });
-    mostrarMensagem(resposta?.mensagem || "Usuário cadastrado com sucesso!", "success");
-    form.reset();
+    mostrarMensagem(resposta?.mensagem || (id ? "Usuário atualizado com sucesso!" : "Usuário cadastrado com sucesso!"), "success");
+    if (!id) form.reset();
   } catch (error) {
     mostrarMensagem(error.message || "Não foi possível cadastrar o usuário.", "error");
   } finally {
-    saveButton.textContent = "Salvar usuário";
+    saveButton.textContent = userIdInput.value ? "Salvar alterações" : "Salvar usuário";
     saveButton.disabled = companySelect.disabled || companySelect.options.length <= 1;
   }
 }

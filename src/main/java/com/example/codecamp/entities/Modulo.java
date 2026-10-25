@@ -32,9 +32,10 @@ public class Modulo {
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
 
-    // Curso ao qual o módulo pertence, usado para conferir quem pode alterá-lo.
-    @ManyToOne
-    @JoinColumn(name = "curso_id")
+    // Lado proprietário da relação N:1: todo módulo referencia obrigatoriamente um curso.
+    // nullable=false cria a restrição de não nulidade na coluna curso_id do banco.
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id", nullable = false)
     @JsonIgnore
     private Curso curso;
 
@@ -59,7 +60,16 @@ public class Modulo {
     }
 
     public void setCurso(Curso curso) {
+        if (curso == null) {
+            throw new IllegalArgumentException("Todo módulo deve pertencer a um curso");
+        }
+        if (this.curso != null && this.curso != curso) {
+            this.curso.getModulos().remove(this);
+        }
         this.curso = curso;
+        if (!curso.getModulos().contains(this)) {
+            curso.getModulos().add(this);
+        }
     }
 
     public Usuario getUsuarioCadastro() {

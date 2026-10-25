@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Adicionar Usuário | CodeCamp</title>
+    <title>Usuário | CodeCamp</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/usuario-cadastro.css">
     <link rel="stylesheet" href="css/global.css">
@@ -23,7 +23,9 @@
           <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
           <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
           <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
           <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+          <li><a class="sidebar__link" href="enderecos.html">Consultar CEP</a></li>
         </ul>
       </nav>
       <button class="sidebar__logout" type="button">Sair</button>
@@ -34,7 +36,7 @@
         <header class="user-form-page__header">
           <div>
             <p class="user-form-page__eyebrow">Administração</p>
-            <h1>Novo Usuário</h1>
+            <h1 id="user-page-title">Novo Usuário</h1>
           </div>
           <a class="user-form-page__back" href="usuarios.html">Voltar para usuários</a>
         </header>
@@ -46,6 +48,7 @@
           </div>
 
           <form id="user-registration-form" class="user-registration-form" novalidate>
+            <input id="user-id" type="hidden">
             <div class="user-form-field user-form-field--wide">
               <label for="user-name">Nome</label>
               <input id="user-name" name="nome" type="text" autocomplete="name" required>
@@ -60,7 +63,8 @@
             </div>
             <div class="user-form-field">
               <label for="user-password">Senha</label>
-              <input id="user-password" name="senha" type="password" autocomplete="new-password" required>
+              <input id="user-password" name="senha" type="password" autocomplete="new-password">
+              <small id="password-help" class="user-form-field__help">Obrigatória para um novo usuário; deixe vazia ao editar para manter a senha atual.</small>
             </div>
             <div class="user-form-field">
               <label for="user-company">Empresa</label>

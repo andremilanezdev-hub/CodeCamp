@@ -95,9 +95,18 @@
 
 .companies-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 900px;
   border-collapse: collapse;
   text-align: left;
+}
+
+.company-action {
+  min-height: 34px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .companies-table th,

@@ -1,0 +1,116 @@
+/* Formulário de matrícula usa o mesmo painel translúcido e cores do restante do CodeCamp. */
+.enrollment-page {
+  width: min(100%, 880px);
+}
+
+.enrollment-header {
+  margin-bottom: 30px;
+}
+
+.enrollment-eyebrow {
+  margin: 0 0 6px;
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.enrollment-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+}
+
+.enrollment-header > p:last-child,
+.enrollment-card__heading p {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+}
+
+.enrollment-card {
+  overflow: hidden;
+  border-radius: 8px;
+  padding: clamp(22px, 4vw, 36px);
+}
+
+.enrollment-card__heading {
+  margin-bottom: 26px;
+}
+
+.enrollment-card__heading h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.enrollment-form {
+  display: grid;
+  gap: 24px;
+}
+
+.enrollment-field {
+  display: grid;
+  gap: 8px;
+}
+
+.enrollment-field label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.enrollment-field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  font: inherit;
+}
+
+.enrollment-field select option {
+  color: #102039;
+  background: #f4f8fc;
+}
+
+.enrollment-field small {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.enrollment-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.enrollment-button {
+  min-height: 46px;
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.enrollment-feedback {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.enrollment-feedback--success {
+  color: #9af0c2;
+}
+
+.enrollment-feedback--error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .enrollment-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .enrollment-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

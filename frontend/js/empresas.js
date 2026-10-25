@@ -34,7 +34,7 @@ function exibirMensagemTabela(mensagem) {
   const row = document.createElement("tr");
   const cell = document.createElement("td");
   cell.className = "companies-table__placeholder";
-  cell.colSpan = 5;
+  cell.colSpan = 6;
   cell.textContent = mensagem;
   row.append(cell);
   companiesTableBody.replaceChildren(row);
@@ -59,10 +59,38 @@ function exibirEmpresas(empresas) {
       criarCelula(empresa.inscricaoEstaual ?? empresa.inscricaoEstadual),
       criarCelula(empresa.quantidadeUsuarios),
     );
+    const actionsCell = document.createElement("td");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "company-action";
+    button.textContent = "Ver usuários";
+    button.addEventListener("click", () => buscarUsuariosDaEmpresa(empresa, button));
+    actionsCell.append(button);
+    row.append(actionsCell);
     companiesTableBody.append(row);
   });
 
   companiesFeedback.textContent = `${empresas.length} empresa(s)`;
+}
+
+async function buscarUsuariosDaEmpresa(empresa, button) {
+  button.disabled = true;
+  button.textContent = "Carregando...";
+  try {
+    const usuarios = await apiRequest(`/empresas/cnpj/${encodeURIComponent(empresa.cnpj)}/usuarios`);
+    const nomes = Array.isArray(usuarios)
+      ? usuarios.map((usuario) => usuario.nome).filter(Boolean)
+      : [];
+    window.alert(nomes.length
+      ? `Usuários de ${empresa.nomeFantasia || empresa.razaoSocial}:\n${nomes.join("\n")}`
+      : "Esta empresa não possui usuários cadastrados.");
+  } catch (error) {
+    companiesFeedback.textContent = error.message || "Não foi possível consultar os usuários desta empresa.";
+    companiesFeedback.classList.add("companies-feedback--error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Ver usuários";
+  }
 }
 
 async function carregarEmpresas() {

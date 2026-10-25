@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Curso | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/curso-cadastro.css">
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="js/curso-cadastro.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial"><span class="brand__mark" aria-hidden="true">CC</span><span>CodeCamp</span></a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+          <li><a class="sidebar__link" href="enderecos.html">Consultar CEP</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+    <main class="main-content">
+      <div class="main-content__inner catalog-form-page">
+        <header class="catalog-form-header">
+          <div><p class="catalog-form-eyebrow">Administração</p><h1 id="course-page-title">Novo Curso</h1></div>
+          <a href="cursos.html">Voltar para cursos</a>
+        </header>
+        <section class="catalog-form-card glass" aria-labelledby="course-form-title">
+          <div class="catalog-form-card__heading"><h2 id="course-form-title">Dados do curso</h2><p>O curso ficará associado ao instrutor autenticado.</p></div>
+          <form id="course-form" class="catalog-form">
+            <input id="course-instructor-id" type="hidden">
+            <input id="course-id" type="hidden">
+            <div class="catalog-field catalog-field--wide"><label for="course-name">Nome do curso</label><input id="course-name" name="nome" type="text" maxlength="150" required></div>
+            <div class="catalog-field"><label for="course-hours">Carga horária (horas)</label><input id="course-hours" name="cargahoraria" type="number" min="1" step="1" required></div>
+            <p id="course-form-message" class="catalog-form-message" role="status" aria-live="polite">Identificando instrutor...</p>
+            <div class="catalog-form-actions"><a href="cursos.html">Cancelar</a><button id="course-save-button" type="submit" disabled>Salvar curso</button></div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

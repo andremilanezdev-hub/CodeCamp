@@ -1,5 +1,6 @@
 package com.example.codecamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,9 @@ public class Usuario {
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
 
-    //Ligação muitos para muitos
+    // Relação legada que representa cursos associados diretamente a Usuario.
+    // A matrícula do domínio Estudante utiliza Estudante.cursos; este campo é mantido
+    // para não quebrar a tabela Usuario_cursos já existente no banco.
     @ManyToMany(fetch = FetchType.LAZY)
     //EAGER: Traz as informação quando usuario for consultado
     //LAZy: Necessidade, só carrega se for necessário
@@ -42,7 +45,15 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "curso_id")
     )
+    @JsonIgnore
     private Set<Curso> cursos = new HashSet<>();
+
+    // Lado inverso da relação instrutor 1:N cursos cadastrados.
+    // Curso.usuarioCadastro é o lado proprietário e guarda a chave estrangeira.
+    // JsonIgnore impede serialização recursiva quando um curso expõe seu instrutor.
+    @OneToMany(mappedBy = "usuarioCadastro", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Curso> cursosCadastrados = new HashSet<>();
 
 
     public Set<Curso> getCursos() {
@@ -51,6 +62,14 @@ public class Usuario {
 
     public void setCursos(Set<Curso> cursos) {
         this.cursos = cursos;
+    }
+
+    public Set<Curso> getCursosCadastrados() {
+        return cursosCadastrados;
+    }
+
+    public void setCursosCadastrados(Set<Curso> cursosCadastrados) {
+        this.cursosCadastrados = cursosCadastrados;
     }
 
     public void setId(Long id) {

@@ -89,8 +89,12 @@ public class UsuarioController {
             usuarioBanco.setNome(usuarioRequest.getNome());
             usuarioBanco.setCpf(usuarioRequest.getCpf());
             usuarioBanco.setDataNascimento(usuarioRequest.getDataNascimento());
+            usuarioBanco.setEmpresa(empresaBanco);
             usuarioBanco.setDataAtualizacao(LocalDateTime.now());
-            usuarioBanco.setSenha(usuarioRequest.getSenha());
+            // Senha vazia em uma edição significa manter a credencial atual.
+            if (usuarioRequest.getSenha() != null && !usuarioRequest.getSenha().isBlank()) {
+                usuarioBanco.setSenha(usuarioRequest.getSenha());
+            }
             usuarioRepository.save(usuarioBanco);
             return ResponseEntity.ok(new UsuarioResponse(usuarioBanco.getId(),
                     "Usuario Atualizado com sucesso!"));
@@ -107,7 +111,8 @@ public class UsuarioController {
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
 
         if (usuarioBanco !=null){
-            usuarioBanco.setStatus(usuarioBanco.getStatus());
+            // Atualiza o status informado para ativar ou desativar a conta.
+            usuarioBanco.setStatus(usuarioRequest.getStatus());
             usuarioRepository.save(usuarioBanco);
             return ResponseEntity.ok(new UsuarioResponse(usuarioBanco.getId(),
                     "Usuario Atualizado com sucesso!"));
