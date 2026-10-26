@@ -46,6 +46,13 @@ public class EstudanteController {
         Estudante estudante = new Estudante();
         estudante.setNome(estudanteRequest.getNome());
         estudante.setCpf(estudanteRequest.getCpf());
+        estudante.setCep(estudanteRequest.getCep());
+        estudante.setLogradouro(estudanteRequest.getLogradouro());
+        estudante.setComplemento(estudanteRequest.getComplemento());
+        estudante.setBairro(estudanteRequest.getBairro());
+        estudante.setLocalidade(estudanteRequest.getLocalidade());
+        estudante.setUf(estudanteRequest.getUf());
+        estudante.setDdd(estudanteRequest.getDdd());
         estudante.setDataCadastro(LocalDateTime.now());
         estudante.setEmail(estudanteRequest.getEmail());
         estudante.setStatus("A");
@@ -64,6 +71,13 @@ public class EstudanteController {
         if (estudante !=null){
             estudante.setNome(estudanteRequest.getNome());
             estudante.setCpf(estudanteRequest.getCpf());
+            estudante.setCep(estudanteRequest.getCep());
+            estudante.setLogradouro(estudanteRequest.getLogradouro());
+            estudante.setComplemento(estudanteRequest.getComplemento());
+            estudante.setBairro(estudanteRequest.getBairro());
+            estudante.setLocalidade(estudanteRequest.getLocalidade());
+            estudante.setUf(estudanteRequest.getUf());
+            estudante.setDdd(estudanteRequest.getDdd());
             estudante.setEmail(estudanteRequest.getEmail());
             estudante.setDataAtualizacao(LocalDateTime.now());
             estudanteRepository.save(estudante);

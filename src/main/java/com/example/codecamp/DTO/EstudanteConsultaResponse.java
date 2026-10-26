@@ -15,6 +15,14 @@ public class EstudanteConsultaResponse {
     private String email;
     // CPF do estudante.
     private String cpf;
+    // Endereço salvo no cadastro do estudante após a consulta do CEP.
+    private String cep;
+    private String logradouro;
+    private String complemento;
+    private String bairro;
+    private String localidade;
+    private String uf;
+    private String ddd;
     // Data e hora de criação do cadastro.
     private LocalDateTime dataCadastro;
     // Data e hora da última atualização.
@@ -28,6 +36,13 @@ public class EstudanteConsultaResponse {
         this.nome = estudante.getNome();
         this.email = estudante.getEmail();
         this.cpf = estudante.getCpf();
+        this.cep = estudante.getCep();
+        this.logradouro = estudante.getLogradouro();
+        this.complemento = estudante.getComplemento();
+        this.bairro = estudante.getBairro();
+        this.localidade = estudante.getLocalidade();
+        this.uf = estudante.getUf();
+        this.ddd = estudante.getDdd();
         this.dataCadastro = estudante.getDataCadastro();
         this.dataAtualizacao = estudante.getDataAtualizacao();
         this.status = estudante.getStatus();
@@ -63,6 +78,62 @@ public class EstudanteConsultaResponse {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getLocalidade() {
+        return localidade;
+    }
+
+    public void setLocalidade(String localidade) {
+        this.localidade = localidade;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getDdd() {
+        return ddd;
+    }
+
+    public void setDdd(String ddd) {
+        this.ddd = ddd;
     }
 
     public LocalDateTime getDataCadastro() {

@@ -158,6 +158,31 @@
   color: var(--color-ink);
 }
 
+.student-form-dialog {
+  width: min(94vw, 900px);
+  max-height: min(94dvh, 900px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color-scheme: dark;
+  scrollbar-color: rgba(141, 184, 222, 0.55) rgba(7, 19, 41, 0.3);
+  scrollbar-width: thin;
+}
+
+.student-form-dialog::-webkit-scrollbar {
+  width: 10px;
+}
+
+.student-form-dialog::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(7, 19, 41, 0.3);
+}
+
+.student-form-dialog::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(7, 19, 41, 0.3);
+  border-radius: 10px;
+  background: rgba(141, 184, 222, 0.55);
+}
+
 .student-dialog::backdrop {
   background: rgba(2, 8, 24, 0.72);
   -webkit-backdrop-filter: blur(5px);
@@ -215,6 +240,135 @@
   font: inherit;
 }
 
+.student-form-dialog .student-dialog__content {
+  gap: 16px;
+  padding: clamp(20px, 3vw, 34px);
+}
+
+.student-form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+}
+
+.student-form-field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.student-form-field--wide {
+  grid-column: 1 / -1;
+}
+
+.student-form-field label,
+.student-address-lookup > label {
+  color: #e0ecf9;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.student-form-field input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 13px;
+  font: inherit;
+}
+
+.student-address-section {
+  min-width: 0;
+  padding: clamp(14px, 2vw, 20px);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: rgba(7, 19, 41, 0.18);
+}
+
+.student-address-section > h3 {
+  margin: 0 0 14px;
+  color: var(--color-accent);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.student-address-lookup {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.student-cep-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.student-cep-row input,
+.student-address-fields input {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  font: inherit;
+}
+
+.student-cep-row .action-button {
+  min-height: 44px;
+}
+
+.student-address-feedback {
+  min-height: 1.4em;
+}
+
+.student-address-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: rgba(7, 19, 41, 0.2);
+}
+
+.student-form-dialog .student-address-fields {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.student-address-fields > div {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.student-address-fields__wide {
+  grid-column: 1 / -1;
+}
+
+.student-form-dialog .student-address-fields__wide {
+  grid-column: span 2;
+}
+
+.student-address-fields label {
+  color: #e0ecf9;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.student-address-fields input[readonly] {
+  color: var(--color-muted) !important;
+  background: rgba(7, 19, 41, 0.35) !important;
+}
+
+.student-form-dialog .student-address-fields input {
+  min-height: 42px;
+  padding: 8px 11px;
+  font-size: 0.92rem;
+}
+
 .student-dialog__actions {
   display: flex;
   justify-content: flex-end;
@@ -252,6 +406,70 @@
   overflow-wrap: anywhere;
 }
 
+/* A consulta tem mais dados que o formulário; o diálogo amplo e agrupado evita
+   uma coluna vertical longa e deixa a rolagem somente como apoio em telas baixas. */
+.student-details-dialog {
+  width: min(94vw, 1000px);
+  max-height: min(94dvh, 900px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color-scheme: dark;
+  scrollbar-color: rgba(141, 184, 222, 0.55) rgba(7, 19, 41, 0.3);
+  scrollbar-width: thin;
+}
+
+.student-details-dialog::-webkit-scrollbar {
+  width: 10px;
+}
+
+.student-details-dialog::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(7, 19, 41, 0.3);
+}
+
+.student-details-dialog::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(7, 19, 41, 0.3);
+  border-radius: 10px;
+  background: rgba(141, 184, 222, 0.55);
+}
+
+.student-details-dialog .student-dialog__content {
+  padding: clamp(22px, 3vw, 36px);
+}
+
+.student-details-groups {
+  display: grid;
+  gap: 22px;
+}
+
+.student-details-group {
+  min-width: 0;
+}
+
+.student-details-group h3 {
+  margin: 0 0 10px;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.student-details-group .student-details {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.student-details-group .student-details > div {
+  min-height: 0;
+  padding: 11px 13px;
+  background: rgba(7, 19, 41, 0.34);
+}
+
+.student-details-dialog .student-dialog__actions {
+  margin-top: 22px;
+}
+
 @media (max-width: 900px) {
   .students-section__heading {
     align-items: flex-start;
@@ -279,7 +497,116 @@
     padding-inline: 12px;
   }
 
-  .student-details {
+  .student-cep-row {
     grid-template-columns: 1fr;
+  }
+
+  .student-address-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .student-address-fields__wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .student-form-dialog {
+    width: min(94vw, 700px);
+    max-height: 92dvh;
+  }
+
+  .student-form-dialog .student-address-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .student-form-dialog .student-address-fields__wide {
+    grid-column: 1 / -1;
+  }
+
+  .student-details-dialog {
+    width: min(94vw, 640px);
+    max-height: 92dvh;
+  }
+
+  .student-details-group .student-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .student-form-dialog {
+    width: calc(100vw - 20px);
+    max-height: 94dvh;
+    border-radius: 16px;
+  }
+
+  .student-form-dialog .student-dialog__content {
+    gap: 12px;
+    padding: 20px 16px;
+  }
+
+  .student-form-fields,
+  .student-form-dialog .student-address-fields {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .student-form-field--wide,
+  .student-form-dialog .student-address-fields__wide {
+    grid-column: auto;
+  }
+
+  .student-address-section {
+    padding: 14px;
+  }
+
+  .student-details-dialog {
+    width: calc(100vw - 20px);
+    max-height: 94dvh;
+    border-radius: 16px;
+  }
+
+  .student-details-dialog .student-dialog__content {
+    gap: 8px;
+    padding: 20px 16px;
+  }
+
+  .student-details-group .student-details {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .student-details-group .student-details > div {
+    min-height: 0;
+    padding: 11px 13px;
+  }
+}
+
+@media (max-height: 620px) and (min-width: 761px) {
+  .student-form-dialog {
+    max-height: 96dvh;
+  }
+
+  .student-form-dialog .student-dialog__content {
+    gap: 10px;
+    padding-block: 18px;
+  }
+
+  .student-address-section {
+    padding-block: 12px;
+  }
+
+  .student-details-dialog {
+    max-height: 94dvh;
+  }
+
+  .student-details-groups {
+    gap: 14px;
+  }
+
+  .student-details-group .student-details > div {
+    min-height: 0;
+    padding: 10px 12px;
   }
 }

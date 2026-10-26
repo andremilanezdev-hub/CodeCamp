@@ -81,7 +81,7 @@
       </div>
     </main>
 
-    <dialog id="student-form-dialog" class="student-dialog glass" aria-labelledby="student-form-title">
+    <dialog id="student-form-dialog" class="student-dialog student-form-dialog glass" aria-labelledby="student-form-title">
       <form id="student-form" class="student-dialog__content">
         <header class="student-dialog__header">
           <div>
@@ -93,14 +93,58 @@
 
         <input id="student-id" name="id" type="hidden">
 
-        <label for="student-name">Nome</label>
-        <input id="student-name" name="nome" type="text" autocomplete="name" maxlength="150" required>
+        <div class="student-form-fields">
+          <div class="student-form-field student-form-field--wide">
+            <label for="student-name">Nome</label>
+            <input id="student-name" name="nome" type="text" autocomplete="name" maxlength="150" required>
+          </div>
+          <div class="student-form-field">
+            <label for="student-email">E-mail</label>
+            <input id="student-email" name="email" type="email" autocomplete="email" maxlength="150" required>
+          </div>
+          <div class="student-form-field">
+            <label for="student-cpf">CPF</label>
+            <input id="student-cpf" name="cpf" type="text" data-mascara="cpf" inputmode="numeric" autocomplete="off" maxlength="14" required>
+          </div>
+        </div>
 
-        <label for="student-email">E-mail</label>
-        <input id="student-email" name="email" type="email" autocomplete="email" maxlength="150" required>
-
-        <label for="student-cpf">CPF</label>
-        <input id="student-cpf" name="cpf" type="text" data-mascara="cpf" inputmode="numeric" autocomplete="off" maxlength="14" required>
+        <section class="student-address-section" aria-labelledby="student-address-title">
+          <h3 id="student-address-title">Endereço</h3>
+          <div class="student-address-lookup">
+            <label for="student-cep">CEP</label>
+            <div class="student-cep-row">
+              <input id="student-cep" name="cep" type="text" data-mascara="cep" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required>
+              <button id="student-cep-search" class="action-button action-button--secondary" type="button">Buscar endereço</button>
+            </div>
+            <p id="student-address-feedback" class="students-feedback student-address-feedback" role="status" aria-live="polite">Informe o CEP e consulte para preencher o endereço.</p>
+          </div>
+          <div class="student-address-fields" aria-label="Dados retornados pela consulta do CEP">
+            <div class="student-address-fields__wide">
+              <label for="student-street">Logradouro</label>
+              <input id="student-street" name="logradouro" type="text" maxlength="150" readonly>
+            </div>
+            <div>
+              <label for="student-address-complement">Complemento</label>
+              <input id="student-address-complement" name="complemento" type="text" maxlength="100">
+            </div>
+            <div>
+              <label for="student-neighborhood">Bairro</label>
+              <input id="student-neighborhood" name="bairro" type="text" maxlength="100" readonly>
+            </div>
+            <div>
+              <label for="student-city">Cidade</label>
+              <input id="student-city" name="localidade" type="text" maxlength="100" readonly>
+            </div>
+            <div>
+              <label for="student-state">UF</label>
+              <input id="student-state" name="uf" type="text" maxlength="2" readonly>
+            </div>
+            <div>
+              <label for="student-ddd">DDD</label>
+              <input id="student-ddd" name="ddd" type="text" maxlength="2" readonly>
+            </div>
+          </div>
+        </section>
 
         <p id="student-form-feedback" class="students-feedback" role="status" aria-live="polite"></p>
         <footer class="student-dialog__actions">
@@ -110,7 +154,7 @@
       </form>
     </dialog>
 
-    <dialog id="student-details-dialog" class="student-dialog glass" aria-labelledby="student-details-title">
+    <dialog id="student-details-dialog" class="student-dialog student-details-dialog glass" aria-labelledby="student-details-title">
       <section class="student-dialog__content">
         <header class="student-dialog__header">
           <div>
@@ -119,15 +163,37 @@
           </div>
           <button class="student-dialog__close" type="button" data-close-dialog="student-details-dialog" aria-label="Fechar">×</button>
         </header>
-        <dl class="student-details">
-          <div><dt>ID</dt><dd id="student-details-id">—</dd></div>
-          <div><dt>Nome</dt><dd id="student-details-name">—</dd></div>
-          <div><dt>E-mail</dt><dd id="student-details-email">—</dd></div>
-          <div><dt>CPF</dt><dd id="student-details-cpf">—</dd></div>
-          <div><dt>Status</dt><dd id="student-details-status">—</dd></div>
-          <div><dt>Data de cadastro</dt><dd id="student-details-created">—</dd></div>
-          <div><dt>Data de atualização</dt><dd id="student-details-updated">—</dd></div>
-        </dl>
+        <div class="student-details-groups">
+          <section class="student-details-group" aria-labelledby="student-details-personal-title">
+            <h3 id="student-details-personal-title">Dados pessoais</h3>
+            <dl class="student-details">
+              <div><dt>ID</dt><dd id="student-details-id">—</dd></div>
+              <div><dt>Nome</dt><dd id="student-details-name">—</dd></div>
+              <div><dt>E-mail</dt><dd id="student-details-email">—</dd></div>
+              <div><dt>CPF</dt><dd id="student-details-cpf">—</dd></div>
+              <div><dt>Status</dt><dd id="student-details-status">—</dd></div>
+            </dl>
+          </section>
+          <section class="student-details-group" aria-labelledby="student-details-address-title">
+            <h3 id="student-details-address-title">Endereço</h3>
+            <dl class="student-details">
+              <div><dt>CEP</dt><dd id="student-details-cep">—</dd></div>
+              <div><dt>Logradouro</dt><dd id="student-details-street">—</dd></div>
+              <div><dt>Complemento</dt><dd id="student-details-complement">—</dd></div>
+              <div><dt>Bairro</dt><dd id="student-details-neighborhood">—</dd></div>
+              <div><dt>Cidade</dt><dd id="student-details-city">—</dd></div>
+              <div><dt>UF</dt><dd id="student-details-state">—</dd></div>
+              <div><dt>DDD</dt><dd id="student-details-ddd">—</dd></div>
+            </dl>
+          </section>
+          <section class="student-details-group" aria-labelledby="student-details-record-title">
+            <h3 id="student-details-record-title">Dados do cadastro</h3>
+            <dl class="student-details">
+              <div><dt>Data de cadastro</dt><dd id="student-details-created">—</dd></div>
+              <div><dt>Data de atualização</dt><dd id="student-details-updated">—</dd></div>
+            </dl>
+          </section>
+        </div>
         <footer class="student-dialog__actions">
           <button class="students-button" type="button" data-close-dialog="student-details-dialog">Fechar</button>
         </footer>

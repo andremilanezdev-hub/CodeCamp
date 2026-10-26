@@ -30,17 +30,17 @@
       <div class="main-content__inner catalog-form-page">
         <header class="catalog-form-header">
           <div><p class="catalog-form-eyebrow">Administração</p><h1 id="course-page-title">Novo Curso</h1></div>
-          <a href="cursos.html">Voltar para cursos</a>
+          <a class="action-button action-button--secondary" href="cursos.html">Voltar para cursos</a>
         </header>
         <section class="catalog-form-card glass" aria-labelledby="course-form-title">
           <div class="catalog-form-card__heading"><h2 id="course-form-title">Dados do curso</h2><p>O curso ficará associado ao instrutor autenticado.</p></div>
           <form id="course-form" class="catalog-form">
             <input id="course-instructor-id" type="hidden">
             <input id="course-id" type="hidden">
-            <div class="catalog-field catalog-field--wide"><label for="course-name">Nome do curso</label><input id="course-name" name="nome" type="text" maxlength="150" required></div>
+            <div class="catalog-field"><label for="course-name">Nome do curso</label><input id="course-name" name="nome" type="text" maxlength="150" required></div>
             <div class="catalog-field"><label for="course-hours">Carga horária (horas)</label><input id="course-hours" name="cargahoraria" type="number" min="1" step="1" required></div>
             <p id="course-form-message" class="catalog-form-message" role="status" aria-live="polite">Identificando instrutor...</p>
-            <div class="catalog-form-actions"><a href="cursos.html">Cancelar</a><button id="course-save-button" type="submit" disabled>Salvar curso</button></div>
+            <div class="catalog-form-actions"><a class="action-button action-button--secondary" href="cursos.html">Cancelar</a><button id="course-save-button" type="submit" disabled>Salvar curso</button></div>
           </form>
         </section>
       </div>

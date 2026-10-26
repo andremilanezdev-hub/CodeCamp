@@ -12,11 +12,21 @@ const studentIdInput = document.querySelector("#student-id");
 const studentNameInput = document.querySelector("#student-name");
 const studentEmailInput = document.querySelector("#student-email");
 const studentCpfInput = document.querySelector("#student-cpf");
+const studentCepInput = document.querySelector("#student-cep");
+const studentCepSearchButton = document.querySelector("#student-cep-search");
+const studentAddressFeedback = document.querySelector("#student-address-feedback");
+const studentStreetInput = document.querySelector("#student-street");
+const studentAddressComplementInput = document.querySelector("#student-address-complement");
+const studentNeighborhoodInput = document.querySelector("#student-neighborhood");
+const studentCityInput = document.querySelector("#student-city");
+const studentStateInput = document.querySelector("#student-state");
+const studentDddInput = document.querySelector("#student-ddd");
 const studentFormFeedback = document.querySelector("#student-form-feedback");
 const studentSaveButton = document.querySelector("#student-save-button");
 const studentDetailsDialog = document.querySelector("#student-details-dialog");
 
 let estudantes = [];
+let cepConsultado = "";
 instalarMascaras();
 
 // Marca a página atual no menu lateral.
@@ -62,6 +72,60 @@ function exibirFeedback(mensagem, tipo = "") {
 function exibirFeedbackFormulario(mensagem, tipo = "") {
   studentFormFeedback.textContent = mensagem;
   studentFormFeedback.classList.toggle("students-feedback--error", tipo === "erro");
+}
+
+function exibirFeedbackEndereco(mensagem, tipo = "") {
+  studentAddressFeedback.textContent = mensagem;
+  studentAddressFeedback.classList.toggle("students-feedback--error", tipo === "erro");
+}
+
+function limparCamposEndereco() {
+  studentStreetInput.value = "";
+  studentAddressComplementInput.value = "";
+  studentNeighborhoodInput.value = "";
+  studentCityInput.value = "";
+  studentStateInput.value = "";
+  studentDddInput.value = "";
+}
+
+function preencherEndereco(endereco) {
+  studentStreetInput.value = endereco.logradouro ?? "";
+  studentAddressComplementInput.value = endereco.complemento ?? "";
+  studentNeighborhoodInput.value = endereco.bairro ?? "";
+  studentCityInput.value = endereco.localidade ?? "";
+  studentStateInput.value = endereco.uf ?? "";
+  studentDddInput.value = endereco.ddd ?? "";
+}
+
+// Usa a rota de CEP já existente, que consulta o ViaCEP no backend e devolve
+// os campos de endereço sem adicionar integração ou serviço novo ao projeto.
+async function buscarEnderecoEstudante() {
+  const cep = somenteDigitos(studentCepInput.value);
+  if (cep.length !== 8) {
+    cepConsultado = "";
+    exibirFeedbackEndereco("Informe um CEP com 8 dígitos.", "erro");
+    studentCepInput.focus();
+    return;
+  }
+
+  studentCepSearchButton.disabled = true;
+  exibirFeedbackEndereco("Consultando CEP...");
+  try {
+    const endereco = await apiRequest(`/api/enderecos/${encodeURIComponent(cep)}`);
+    if (!endereco?.cep) {
+      throw new Error("CEP não encontrado. Confira os números e tente novamente.");
+    }
+    preencherEndereco(endereco);
+    studentCepInput.value = endereco.cep;
+    cepConsultado = cep;
+    exibirFeedbackEndereco("Endereço localizado. Os dados serão salvos junto ao estudante.");
+  } catch (error) {
+    cepConsultado = "";
+    limparCamposEndereco();
+    exibirFeedbackEndereco(mensagemDeErro(error), "erro");
+  } finally {
+    studentCepSearchButton.disabled = false;
+  }
 }
 
 function mensagemDeErro(error) {
@@ -178,6 +242,9 @@ async function carregarEstudantes() {
 function abrirNovoEstudante() {
   studentForm.reset();
   studentIdInput.value = "";
+  cepConsultado = "";
+  limparCamposEndereco();
+  exibirFeedbackEndereco("Informe o CEP e consulte para preencher o endereço.");
   studentFormTitle.textContent = "Novo estudante";
   studentSaveButton.textContent = "Salvar estudante";
   exibirFeedbackFormulario("");
@@ -193,6 +260,13 @@ async function consultarEstudante(id) {
       "student-details-name": estudante.nome,
       "student-details-email": estudante.email,
       "student-details-cpf": formatarCpf(estudante.cpf),
+      "student-details-cep": formatarValor(estudante.cep).replace(/^(\d{5})(\d{3})$/, "$1-$2"),
+      "student-details-street": estudante.logradouro,
+      "student-details-complement": estudante.complemento,
+      "student-details-neighborhood": estudante.bairro,
+      "student-details-city": estudante.localidade,
+      "student-details-state": estudante.uf,
+      "student-details-ddd": estudante.ddd,
       "student-details-status": normalizarStatus(estudante.status).texto,
       "student-details-created": formatarData(estudante.dataCadastro),
       "student-details-updated": formatarData(estudante.dataAtualizacao),
@@ -213,6 +287,12 @@ async function editarEstudante(id) {
     studentNameInput.value = estudante.nome ?? "";
     studentEmailInput.value = estudante.email ?? "";
     studentCpfInput.value = formatarCpf(estudante.cpf);
+    studentCepInput.value = estudante.cep ?? "";
+    preencherEndereco(estudante);
+    cepConsultado = somenteDigitos(estudante.cep).length === 8 ? somenteDigitos(estudante.cep) : "";
+    exibirFeedbackEndereco(cepConsultado
+      ? "Endereço salvo no cadastro. Consulte novamente se alterar o CEP."
+      : "Informe o CEP e consulte para preencher o endereço.");
     studentFormTitle.textContent = `Editar estudante #${formatarValor(estudante.id)}`;
     studentSaveButton.textContent = "Salvar alterações";
     exibirFeedbackFormulario("");
@@ -235,10 +315,24 @@ async function salvarEstudante(event) {
     studentSaveButton.disabled = false;
     return;
   }
+  const cep = somenteDigitos(studentCepInput.value);
+  if (cep.length !== 8 || cepConsultado !== cep) {
+    exibirFeedbackFormulario("Consulte um CEP válido antes de salvar o estudante.", "erro");
+    studentCepInput.focus();
+    studentSaveButton.disabled = false;
+    return;
+  }
   const dados = {
     nome: studentNameInput.value.trim(),
     email: studentEmailInput.value.trim(),
     cpf: somenteDigitos(studentCpfInput.value),
+    cep,
+    logradouro: studentStreetInput.value.trim(),
+    complemento: studentAddressComplementInput.value.trim(),
+    bairro: studentNeighborhoodInput.value.trim(),
+    localidade: studentCityInput.value.trim(),
+    uf: studentStateInput.value.trim(),
+    ddd: studentDddInput.value.trim(),
   };
 
   try {
@@ -287,6 +381,14 @@ async function alterarStatus(id, acao, button) {
 }
 
 newStudentButton.addEventListener("click", abrirNovoEstudante);
+studentCepSearchButton.addEventListener("click", buscarEnderecoEstudante);
+studentCepInput.addEventListener("input", () => {
+  if (somenteDigitos(studentCepInput.value) !== cepConsultado) {
+    cepConsultado = "";
+    limparCamposEndereco();
+    exibirFeedbackEndereco("Consulte o CEP para preencher o endereço.");
+  }
+});
 studentsSearchInput.addEventListener("input", exibirEstudantes);
 studentForm.addEventListener("submit", salvarEstudante);
 

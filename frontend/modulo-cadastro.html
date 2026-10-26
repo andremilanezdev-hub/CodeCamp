@@ -30,18 +30,18 @@
       <div class="main-content__inner catalog-form-page">
         <header class="catalog-form-header">
             <div><p class="catalog-form-eyebrow">Administração</p><h1 id="module-page-title">Novo Módulo</h1></div>
-          <a href="modulos.html">Voltar para módulos</a>
+          <a class="action-button action-button--secondary" href="modulos.html">Voltar para módulos</a>
         </header>
         <section class="catalog-form-card glass" aria-labelledby="module-form-title">
           <div class="catalog-form-card__heading"><h2 id="module-form-title">Dados do módulo</h2><p>Escolha um curso cadastrado por você para vincular o módulo.</p></div>
           <form id="module-form" class="catalog-form">
             <input id="module-instructor-id" type="hidden">
             <input id="module-id" type="hidden">
-            <div class="catalog-field catalog-field--wide"><label for="module-course">Curso</label><select id="module-course" name="curso_id" required disabled><option value="">Carregando cursos...</option></select></div>
-            <div class="catalog-field catalog-field--wide"><label for="module-name">Nome do módulo</label><input id="module-name" name="nome" type="text" maxlength="150" required></div>
+            <div class="catalog-field"><label for="module-course">Curso</label><select id="module-course" name="curso_id" required disabled><option value="">Carregando cursos...</option></select></div>
+            <div class="catalog-field"><label for="module-name">Nome do módulo</label><input id="module-name" name="nome" type="text" maxlength="150" required></div>
             <div class="catalog-field"><label for="module-hours">Carga horária (horas)</label><input id="module-hours" name="cargahoraria" type="number" min="1" step="1" required></div>
             <p id="module-form-message" class="catalog-form-message" role="status" aria-live="polite">Carregando cursos...</p>
-            <div class="catalog-form-actions"><a href="modulos.html">Cancelar</a><button id="module-save-button" type="submit" disabled>Salvar módulo</button></div>
+            <div class="catalog-form-actions"><a class="action-button action-button--secondary" href="modulos.html">Cancelar</a><button id="module-save-button" type="submit" disabled>Salvar módulo</button></div>
           </form>
         </section>
       </div>
