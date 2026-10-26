@@ -1,10 +1,12 @@
 import { apiRequest } from "./api.js";
+import { formatarCep, instalarMascaras, somenteDigitos } from "./mascaras.js";
 
 const form = document.querySelector("#address-form");
 const cepInput = document.querySelector("#address-cep");
 const searchButton = document.querySelector("#address-search-button");
 const feedback = document.querySelector("#address-feedback");
 const result = document.querySelector("#address-result");
+instalarMascaras();
 
 document.querySelectorAll(".sidebar__link").forEach((link) => {
   if (link.getAttribute("href") === "enderecos.html") link.classList.add("active");
@@ -12,7 +14,7 @@ document.querySelectorAll(".sidebar__link").forEach((link) => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const cep = cepInput.value.replace(/\D/g, "");
+  const cep = somenteDigitos(cepInput.value);
   result.hidden = true;
   feedback.classList.remove("error");
 
@@ -30,7 +32,8 @@ form.addEventListener("submit", async (event) => {
     const address = await apiRequest(`/api/enderecos/${encodeURIComponent(cep)}`);
     if (!address || !address.cep) throw new Error("CEP não encontrado.");
     for (const field of result.querySelectorAll("[data-address]")) {
-      field.textContent = address[field.dataset.address] || "—";
+      const valor = address[field.dataset.address] || "—";
+      field.textContent = field.dataset.address === "cep" ? formatarCep(valor) : valor;
     }
     result.hidden = false;
     feedback.textContent = `Endereço localizado para o CEP ${address.cep}.`;

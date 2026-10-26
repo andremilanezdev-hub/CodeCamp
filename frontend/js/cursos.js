@@ -98,27 +98,33 @@ function exibirCursos(cursos) {
     const actionsCell = document.createElement("td");
     const status = String(curso.status ?? "").trim().toUpperCase();
     if (instructorId && String(usuarioCadastro?.id) === String(instructorId)) {
-      const editLink = document.createElement("a");
-      editLink.className = "course-action";
-      editLink.href = `curso-cadastro.html?id=${encodeURIComponent(curso.id)}`;
-      editLink.textContent = "Editar";
-      actionsCell.append(editLink);
+      const actions = document.createElement("div");
+      actions.className = "table-actions";
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "action-button";
+      editButton.textContent = "Editar";
+      editButton.addEventListener("click", () => {
+        window.location.assign(`curso-cadastro.html?id=${encodeURIComponent(curso.id)}`);
+      });
+      actions.append(editButton);
 
       if (status === "D" || status === "I") {
         const activateButton = document.createElement("button");
         activateButton.type = "button";
-        activateButton.className = "course-action course-action--secondary";
+        activateButton.className = "action-button action-button--secondary";
         activateButton.textContent = "Ativar";
         activateButton.addEventListener("click", () => alterarStatusCurso(curso, "A"));
-        actionsCell.append(activateButton);
+        actions.append(activateButton);
       } else if (status !== "I") {
         const deactivateButton = document.createElement("button");
         deactivateButton.type = "button";
-        deactivateButton.className = "course-action course-action--danger";
+        deactivateButton.className = "action-button action-button--danger";
         deactivateButton.textContent = "Desativar";
         deactivateButton.addEventListener("click", () => desativarCurso(curso));
-        actionsCell.append(deactivateButton);
+        actions.append(deactivateButton);
       }
+      actionsCell.append(actions);
     } else {
       actionsCell.textContent = "—";
     }

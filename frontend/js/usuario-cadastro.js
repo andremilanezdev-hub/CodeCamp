@@ -1,4 +1,5 @@
 import { apiRequest } from "./api.js";
+import { formatarCpf, instalarMascaras, somenteDigitos } from "./mascaras.js";
 
 const form = document.querySelector("#user-registration-form");
 const nameInput = document.querySelector("#user-name");
@@ -13,6 +14,7 @@ const saveButton = document.querySelector("#save-user-button");
 const pageTitle = document.querySelector("#user-page-title");
 const passwordHelp = document.querySelector("#password-help");
 const requestedUserId = new URLSearchParams(window.location.search).get("id");
+instalarMascaras();
 
 // Destaca Usuários no menu mesmo nesta tela secundária de cadastro.
 document.querySelectorAll(".sidebar__link").forEach((link) => {
@@ -84,7 +86,7 @@ async function carregarUsuarioParaEdicao() {
 
     userIdInput.value = usuario.id;
     nameInput.value = usuario.nome ?? "";
-    cpfInput.value = usuario.cpf ?? "";
+    cpfInput.value = formatarCpf(usuario.cpf);
     birthDateInput.value = String(usuario.dataNascimento ?? "").slice(0, 10);
     companySelect.value = String(usuario.empresa_id ?? "");
     pageTitle.textContent = `Editar usuário #${usuario.id}`;
@@ -125,6 +127,12 @@ function validarFormulario() {
     return false;
   }
 
+  if (somenteDigitos(cpfInput.value).length !== 11) {
+    mostrarMensagem("Informe um CPF com 11 dígitos.", "error");
+    cpfInput.focus();
+    return false;
+  }
+
   return true;
 }
 
@@ -138,7 +146,7 @@ async function cadastrarUsuario(event) {
   const id = userIdInput.value;
   const dadosUsuario = {
     nome: nameInput.value.trim(),
-    cpf: cpfInput.value.trim(),
+    cpf: somenteDigitos(cpfInput.value),
     dataNascimento: birthDateInput.value,
     senha: passwordInput.value,
     empresa_id: Number(companySelect.value),

@@ -35,7 +35,7 @@
         <header class="company-form-page__header">
           <div>
             <p class="company-form-page__eyebrow">Administração</p>
-            <h1>Nova Empresa</h1>
+            <h1 id="company-page-title">Nova Empresa</h1>
           </div>
           <a class="company-form-page__back" href="empresas.html">Voltar para empresas</a>
         </header>
@@ -47,6 +47,7 @@
           </div>
 
           <form id="company-registration-form" class="company-registration-form" novalidate>
+            <input id="company-id" name="id" type="hidden">
             <div class="company-form-field company-form-field--wide">
               <label for="company-legal-name">Razão Social</label>
               <input id="company-legal-name" name="razaoSocial" type="text" autocomplete="organization" required>
@@ -57,7 +58,7 @@
             </div>
             <div class="company-form-field">
               <label for="company-cnpj">CNPJ</label>
-              <input id="company-cnpj" name="cnpj" type="text" inputmode="numeric" autocomplete="off" required>
+              <input id="company-cnpj" name="cnpj" type="text" data-mascara="cnpj" inputmode="numeric" maxlength="18" autocomplete="off" required>
             </div>
             <div class="company-form-field">
               <label for="company-state-registration">Inscrição Estadual</label>

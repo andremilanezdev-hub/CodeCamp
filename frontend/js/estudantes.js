@@ -1,4 +1,5 @@
 import { apiRequest } from "./api.js";
+import { formatarCpf, instalarMascaras, somenteDigitos } from "./mascaras.js";
 
 const studentsTableBody = document.querySelector("#students-table-body");
 const studentsFeedback = document.querySelector("#students-feedback");
@@ -16,6 +17,7 @@ const studentSaveButton = document.querySelector("#student-save-button");
 const studentDetailsDialog = document.querySelector("#student-details-dialog");
 
 let estudantes = [];
+instalarMascaras();
 
 // Marca a página atual no menu lateral.
 document.querySelectorAll(".sidebar__link").forEach((link) => {
@@ -78,7 +80,7 @@ function criarCelula(valor) {
 function criarBotaoAcao(rotulo, acao, id, classe = "") {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = `student-action ${classe}`.trim();
+  button.className = `action-button ${classe}`.trim();
   button.dataset.action = acao;
   button.dataset.id = String(id);
   button.textContent = rotulo;
@@ -98,7 +100,7 @@ function mostrarMensagemTabela(mensagem) {
 function exibirEstudantes() {
   const termo = studentsSearchInput.value.trim().toLocaleLowerCase("pt-BR");
   const filtrados = estudantes.filter((estudante) => {
-    const texto = [estudante.id, estudante.nome, estudante.email, estudante.cpf]
+    const texto = [estudante.id, estudante.nome, estudante.email, estudante.cpf, formatarCpf(estudante.cpf), somenteDigitos(estudante.cpf)]
       .map((valor) => String(valor ?? "").toLocaleLowerCase("pt-BR"))
       .join(" ");
     return texto.includes(termo);
@@ -128,20 +130,20 @@ function exibirEstudantes() {
       criarCelula(estudante.id),
       criarCelula(estudante.nome),
       criarCelula(estudante.email),
-      criarCelula(estudante.cpf),
+      criarCelula(formatarCpf(estudante.cpf)),
       statusCell,
       criarCelula(formatarData(estudante.dataCadastro)),
     );
 
     const actionsCell = document.createElement("td");
     const actions = document.createElement("div");
-    actions.className = "students-table__actions";
+    actions.className = "students-table__actions table-actions";
     actions.append(
       criarBotaoAcao("Ver", "details", estudante.id),
       criarBotaoAcao("Editar", "edit", estudante.id),
       status.ativo
-        ? criarBotaoAcao("Desativar", "deactivate", estudante.id, "student-action--danger")
-        : criarBotaoAcao("Ativar", "activate", estudante.id, "student-action--secondary"),
+        ? criarBotaoAcao("Desativar", "deactivate", estudante.id, "action-button--danger")
+        : criarBotaoAcao("Ativar", "activate", estudante.id, "action-button--secondary"),
     );
     actionsCell.append(actions);
     row.append(actionsCell);
@@ -190,7 +192,7 @@ async function consultarEstudante(id) {
       "student-details-id": estudante.id,
       "student-details-name": estudante.nome,
       "student-details-email": estudante.email,
-      "student-details-cpf": estudante.cpf,
+      "student-details-cpf": formatarCpf(estudante.cpf),
       "student-details-status": normalizarStatus(estudante.status).texto,
       "student-details-created": formatarData(estudante.dataCadastro),
       "student-details-updated": formatarData(estudante.dataAtualizacao),
@@ -210,7 +212,7 @@ async function editarEstudante(id) {
     studentIdInput.value = estudante.id ?? "";
     studentNameInput.value = estudante.nome ?? "";
     studentEmailInput.value = estudante.email ?? "";
-    studentCpfInput.value = estudante.cpf ?? "";
+    studentCpfInput.value = formatarCpf(estudante.cpf);
     studentFormTitle.textContent = `Editar estudante #${formatarValor(estudante.id)}`;
     studentSaveButton.textContent = "Salvar alterações";
     exibirFeedbackFormulario("");
@@ -227,10 +229,16 @@ async function salvarEstudante(event) {
   exibirFeedbackFormulario("Salvando...");
 
   const id = studentIdInput.value;
+  if (somenteDigitos(studentCpfInput.value).length !== 11) {
+    exibirFeedbackFormulario("Informe um CPF com 11 dígitos.", "erro");
+    studentCpfInput.focus();
+    studentSaveButton.disabled = false;
+    return;
+  }
   const dados = {
     nome: studentNameInput.value.trim(),
     email: studentEmailInput.value.trim(),
-    cpf: studentCpfInput.value.trim(),
+    cpf: somenteDigitos(studentCpfInput.value),
   };
 
   try {

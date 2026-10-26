@@ -1,5 +1,5 @@
 .students-page {
-  width: min(100%, 1320px);
+  width: min(100%, 1440px);
 }
 
 .students-page__header {
@@ -127,6 +127,8 @@
 .students-table td {
   color: var(--color-ink);
   font-size: 0.88rem;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 
 .students-table tbody tr:hover {
@@ -144,31 +146,6 @@
   flex-wrap: wrap;
   gap: 7px;
   min-width: 218px;
-}
-
-.student-action {
-  min-height: 34px;
-  margin: 0;
-  padding: 6px 10px;
-  border-radius: 9px;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.student-action--secondary {
-  border: 1px solid rgba(112, 231, 188, 0.3);
-  background: rgba(59, 184, 135, 0.15);
-  color: #a5f0d0;
-  box-shadow: none;
-}
-
-.student-action--danger {
-  border: 1px solid rgba(255, 165, 160, 0.3);
-  background: rgba(209, 82, 91, 0.16);
-  color: #ffc0bd;
-  box-shadow: none;
 }
 
 .student-dialog {

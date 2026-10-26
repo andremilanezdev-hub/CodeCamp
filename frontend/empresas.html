@@ -59,16 +59,28 @@
                   <th scope="col">CNPJ</th>
                   <th scope="col">Inscrição Estadual</th>
                   <th scope="col">Qtd. Usuários</th>
+                  <th scope="col">Status</th>
                   <th scope="col">Ações</th>
                 </tr>
               </thead>
               <tbody id="companies-table-body">
                 <tr>
-                  <td class="companies-table__placeholder" colspan="6">Buscando dados...</td>
+                  <td class="companies-table__placeholder" colspan="7">Buscando dados...</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section id="company-users-section" class="company-users-section glass" aria-labelledby="company-users-title" hidden>
+          <div class="company-users-section__heading">
+            <div>
+              <h2 id="company-users-title">Usuários da empresa</h2>
+              <p id="company-users-summary" class="company-users-summary"></p>
+            </div>
+            <button id="close-company-users" class="action-button action-button--secondary" type="button">Fechar</button>
+          </div>
+          <div id="company-users-grid" class="company-users-grid" aria-live="polite"></div>
         </section>
       </div>
     </main>

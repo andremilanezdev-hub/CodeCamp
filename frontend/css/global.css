@@ -74,6 +74,9 @@ button,
 .primary-button,
 .companies-button,
 .courses-button {
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
   border: 1px solid rgba(121, 244, 233, 0.3);
   border-radius: 14px;
   background: linear-gradient(135deg, #22aaa9, #397bd0);
@@ -92,6 +95,54 @@ button:hover:not(:disabled),
 
 button:disabled {
   opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Ações de linha usam o mesmo botão em todos os módulos, independentemente da tela. */
+.action-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border: 1px solid rgba(121, 244, 233, 0.3);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #168f9e, #326fc1);
+  color: #f8ffff;
+  box-shadow: 0 6px 16px rgba(19, 175, 185, 0.16);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.action-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow: 0 9px 20px rgba(32, 201, 203, 0.24);
+}
+
+.action-button--secondary {
+  border-color: rgba(112, 231, 188, 0.3);
+  background: linear-gradient(135deg, #187b80, #287d9d);
+}
+
+.action-button--danger {
+  border-color: rgba(255, 165, 160, 0.34);
+  background: linear-gradient(135deg, #913e57, #a74562);
+}
+
+.table-actions {
+  display: flex;
+  min-width: 190px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 input,
@@ -178,6 +229,42 @@ table tbody tr:hover {
   border-color: rgba(255, 165, 160, 0.28);
   background: rgba(209, 82, 91, 0.18);
   color: #ffc0bd;
+}
+
+.company-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(196, 224, 247, 0.18);
+  background: rgba(198, 220, 240, 0.12);
+  color: #d8e7f5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.company-status--active {
+  border-color: rgba(112, 231, 188, 0.28);
+  background: rgba(59, 184, 135, 0.18);
+  color: #a5f0d0;
+}
+
+.company-status--inactive {
+  border-color: rgba(255, 165, 160, 0.28);
+  background: rgba(209, 82, 91, 0.18);
+  color: #ffc0bd;
+}
+
+@media (max-width: 640px) {
+  .table-actions {
+    min-width: 0;
+  }
+
+  .action-button {
+    min-height: 38px;
+    padding: 8px 11px;
+  }
 }
 
 .message-error,

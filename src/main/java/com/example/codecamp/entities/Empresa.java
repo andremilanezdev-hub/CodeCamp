@@ -30,6 +30,9 @@ public class Empresa {
     // Inscrição estadual da empresa.
     private String inscricaoEstaual;
 
+    // Situação do cadastro: A para ativa e D para desativada, seguindo o padrão dos demais recursos.
+    private String status;
+
     // Relação de um para muitos: uma empresa pode estar associada a vários usuários.
     // mappedBy indica que o relacionamento é controlado pelo campo "empresa" em Usuario.
     @OneToMany(mappedBy = "empresa")
@@ -84,6 +87,16 @@ public class Empresa {
     // Define a inscrição estadual.
     public void setInscricaoEstaual(String inscricaoEstaual) {
         this.inscricaoEstaual = inscricaoEstaual;
+    }
+
+    // Retorna a situação atual do cadastro da empresa.
+    public String getStatus() {
+        return status;
+    }
+
+    // Define a situação do cadastro da empresa.
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // Retorna os usuários associados à empresa.

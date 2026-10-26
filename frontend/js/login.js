@@ -1,9 +1,11 @@
 import { apiRequest, salvarToken } from "./api.js";
+import { instalarMascaras, somenteDigitos } from "./mascaras.js";
 
 const loginForm = document.querySelector("#login-form");
 const loginButton = document.querySelector("#login-button");
 const loginMessage = document.querySelector("#login-message");
 const textoBotaoOriginal = loginButton.textContent;
+instalarMascaras();
 
 function mostrarMensagem(texto, tipo = "") {
   loginMessage.textContent = texto;
@@ -18,11 +20,16 @@ async function fazerLogin(event) {
   event.preventDefault();
 
   const formData = new FormData(loginForm);
-  const login = String(formData.get("login") ?? "").trim();
+  const login = somenteDigitos(formData.get("login"));
   const senha = String(formData.get("senha") ?? "");
 
   if (!login || !senha) {
     mostrarMensagem("Informe seu CPF e sua senha.", "warning");
+    return;
+  }
+
+  if (login.length !== 11) {
+    mostrarMensagem("Informe um CPF válido com 11 dígitos.", "warning");
     return;
   }
 

@@ -92,20 +92,26 @@ function exibirModulos(modulos) {
     const curso = coursesById.get(String(modulo.curso_id));
     const pertenceAoInstrutor = instructorId && String(curso?.usuarioCadastro?.id) === String(instructorId);
     if (pertenceAoInstrutor) {
-      const editLink = document.createElement("a");
-      editLink.className = "module-action";
-      editLink.href = `modulo-cadastro.html?id=${encodeURIComponent(modulo.id)}`;
-      editLink.textContent = "Editar";
-      actionsCell.append(editLink);
+      const actions = document.createElement("div");
+      actions.className = "table-actions";
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "action-button";
+      editButton.textContent = "Editar";
+      editButton.addEventListener("click", () => {
+        window.location.assign(`modulo-cadastro.html?id=${encodeURIComponent(modulo.id)}`);
+      });
+      actions.append(editButton);
 
       const status = String(modulo.status ?? "").toUpperCase();
       const estaDesativado = status === "D" || status === "I";
       const statusButton = document.createElement("button");
       statusButton.type = "button";
-      statusButton.className = estaDesativado ? "module-action module-action--secondary" : "module-action module-action--danger";
+      statusButton.className = estaDesativado ? "action-button action-button--secondary" : "action-button action-button--danger";
       statusButton.textContent = estaDesativado ? "Ativar" : "Desativar";
       statusButton.addEventListener("click", () => alterarStatusModulo(modulo, statusButton, estaDesativado));
-      actionsCell.append(statusButton);
+      actions.append(statusButton);
+      actionsCell.append(actions);
     } else {
       actionsCell.textContent = "—";
     }

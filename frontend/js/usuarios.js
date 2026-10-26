@@ -1,4 +1,5 @@
 import { apiRequest } from "./api.js";
+import { formatarCpf } from "./mascaras.js";
 
 const currentPage = window.location.pathname.split("/").pop();
 const navigationLinks = document.querySelectorAll(".sidebar__link");
@@ -74,25 +75,31 @@ function exibirUsuarios(usuarios) {
 
     row.append(
       criarCelula(usuario.nome),
-      criarCelula(usuario.cpf),
+      criarCelula(formatarCpf(usuario.cpf)),
       criarCelula(usuario.dataNascimento),
       criarCelula(obterNomeEmpresa(usuario)),
       statusCell,
     );
 
     const actionsCell = document.createElement("td");
-    const editLink = document.createElement("a");
-    editLink.className = "user-action";
-    editLink.href = `usuario-cadastro.html?id=${encodeURIComponent(usuario.id)}`;
-    editLink.textContent = "Editar";
-    actionsCell.append(editLink);
+    const actions = document.createElement("div");
+    actions.className = "table-actions";
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "action-button";
+    editButton.textContent = "Editar";
+    editButton.addEventListener("click", () => {
+      window.location.assign(`usuario-cadastro.html?id=${encodeURIComponent(usuario.id)}`);
+    });
+    actions.append(editButton);
 
     const statusButton = document.createElement("button");
     statusButton.type = "button";
-    statusButton.className = `user-action ${status.ativo ? "user-action--danger" : "user-action--secondary"}`;
+    statusButton.className = `action-button ${status.ativo ? "action-button--danger" : "action-button--secondary"}`;
     statusButton.textContent = status.ativo ? "Desativar" : "Ativar";
     statusButton.addEventListener("click", () => alterarStatusUsuario(usuario, statusButton, status.ativo));
-    actionsCell.append(statusButton);
+    actions.append(statusButton);
+    actionsCell.append(actions);
     row.append(actionsCell);
     usersTableBody.append(row);
   });

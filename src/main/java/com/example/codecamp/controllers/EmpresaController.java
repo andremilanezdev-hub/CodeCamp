@@ -33,6 +33,16 @@ public class EmpresaController {
         return empresaRepository.findAll().stream().map(EmpresaConsultaResponse::new).toList();
     }
 
+    // GET /empresas/{id}: consulta os dados de uma empresa para preencher o formulário de edição.
+    @GetMapping("/{id}")
+    public ResponseEntity<EmpresaConsultaResponse> buscarPorId(@PathVariable Long id) {
+        var empresa = empresaRepository.findById(id).orElse(null);
+        if (empresa == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new EmpresaConsultaResponse(empresa));
+    }
+
 
     // POST /empresas/criar: recebe os dados da empresa, salva no banco e devolve ID e mensagem.
     @PostMapping("/criar")
@@ -45,6 +55,7 @@ public class EmpresaController {
         empresaBanco.setCnpj(empresaRequest.getCnpj());
         empresaBanco.setNomeFantasia(empresaRequest.getNomeFantasia());
         empresaBanco.setInscricaoEstaual(empresaRequest.getInscricaoEstaual());
+        empresaBanco.setStatus("A");
 
 
         // Persiste a empresa; após salvar, o ID gerado pelo banco fica disponível na entidade.
@@ -57,6 +68,45 @@ public class EmpresaController {
         empresaResponse.setMensagem("Cadastro da empresa realizado com sucesso!");
 
         return ResponseEntity.ok(empresaResponse);
+    }
+
+    // PUT /empresas/{id}: atualiza os dados cadastrais sem substituir o registro existente.
+    @PutMapping("/{id}")
+    public ResponseEntity<EmpresaResponse> atualizarEmpresa(
+            @PathVariable Long id,
+            @RequestBody EmpresaRequest empresaRequest) {
+        Empresa empresaBanco = empresaRepository.findById(id).orElse(null);
+        if (empresaBanco == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        empresaBanco.setRazaoSocial(empresaRequest.getRazaoSocial());
+        empresaBanco.setNomeFantasia(empresaRequest.getNomeFantasia());
+        empresaBanco.setCnpj(empresaRequest.getCnpj());
+        empresaBanco.setInscricaoEstaual(empresaRequest.getInscricaoEstaual());
+        empresaRepository.save(empresaBanco);
+
+        EmpresaResponse resposta = new EmpresaResponse();
+        resposta.setId(empresaBanco.getId());
+        resposta.setMensagem("Empresa atualizada com sucesso!");
+        return ResponseEntity.ok(resposta);
+    }
+
+    // DELETE /empresas/{id}: desativa logicamente a empresa, preservando o registro e seus vínculos.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<EmpresaResponse> desativarEmpresa(@PathVariable Long id) {
+        Empresa empresaBanco = empresaRepository.findById(id).orElse(null);
+        if (empresaBanco == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        empresaBanco.setStatus("D");
+        empresaRepository.save(empresaBanco);
+
+        EmpresaResponse resposta = new EmpresaResponse();
+        resposta.setId(empresaBanco.getId());
+        resposta.setMensagem("Empresa desativada com sucesso!");
+        return ResponseEntity.ok(resposta);
     }
 
 

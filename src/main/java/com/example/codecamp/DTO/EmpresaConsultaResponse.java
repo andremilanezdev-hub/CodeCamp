@@ -12,6 +12,7 @@ public class EmpresaConsultaResponse {
         this.nomeFantasia = empresa.getNomeFantasia();
         this.cnpj = empresa.getCnpj();
         this.inscricaoEstaual = empresa.getInscricaoEstaual();
+        this.status = empresa.getStatus();
         // Conta os usuários associados à empresa; se a lista não estiver disponível, retorna zero.
         if(empresa.getUsuarios() != null){
             this.quantidadeUsuarios = empresa.getUsuarios().size();
@@ -34,6 +35,16 @@ public class EmpresaConsultaResponse {
     private String inscricaoEstaual;
     // Total de usuários associados à empresa.
     private int quantidadeUsuarios;
+    // Situação usada pelo frontend para distinguir empresas ativas das desativadas.
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     // Retorna o total de usuários associados.
     public int getQuantidadeUsuarios() {

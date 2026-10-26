@@ -1,5 +1,5 @@
 .users-page {
-  width: min(100%, 1120px);
+  width: min(100%, 1440px);
 }
 
 .users-page__header {
@@ -88,7 +88,7 @@
 
 .users-table {
   width: 100%;
-  min-width: 920px;
+  min-width: 1020px;
   border-collapse: collapse;
   text-align: left;
 }
@@ -111,6 +111,8 @@
 .users-table td {
   color: var(--color-ink);
   font-size: 0.92rem;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 
 .users-table tbody tr:hover {
@@ -145,27 +147,6 @@
   background: #f7e9e6;
   color: #963d32;
 }
-
-.user-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  margin-right: 6px;
-  padding: 6px 10px;
-  border: 1px solid rgba(121, 244, 233, .28);
-  border-radius: 9px;
-  background: rgba(33, 133, 157, .2);
-  color: #b8f3ef;
-  font: inherit;
-  font-size: .8rem;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.user-action--danger { border-color: rgba(255, 165, 160, .3); background: rgba(209, 82, 91, .16); color: #ffc0bd; }
-.user-action--secondary { border-color: rgba(112, 231, 188, .3); background: rgba(59, 184, 135, .15); color: #a5f0d0; }
 
 @media (max-width: 760px) {
   .users-page__header {
