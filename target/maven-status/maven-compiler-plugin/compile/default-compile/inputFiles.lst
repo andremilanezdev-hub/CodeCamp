@@ -16,6 +16,7 @@
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/LoginRequest.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/LoginResponse.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/MatriculaRequest.java
+/home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/MatriculaResponse.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/ModuloConsultaResponse.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/ModuloRequest.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/DTO/ModuloResponse.java
@@ -44,6 +45,7 @@
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/repository/UsuarioRepository.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/service/InstrutorPermissaoService.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/service/MatriculaService.java
-/home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/service/ViaCepService.java
+/home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/service/ModuloService.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/utils/CpfUtils.java
 /home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/utils/OnlyNumber.java
+/home/andrem/Cursos/JovemProgramador/ProgramacaoBackend/CodeCamp/src/main/java/com/example/codecamp/utils/ViaCEPUtils.java

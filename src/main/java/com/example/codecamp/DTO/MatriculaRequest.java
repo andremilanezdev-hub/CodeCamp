@@ -11,11 +11,11 @@ public class MatriculaRequest {
         // Construtor vazio exigido pelo Jackson para converter o JSON recebido em objeto Java.
     }
 
-    // ID do instrutor declarado pelo cliente; o serviço compara esse ID com o usuário do JWT.
+    // ID do instrutor declarado pelo cliente; o controller compara esse ID com o usuário do JWT.
     private Long usuario_id;
     // ID do estudante que será associado ao curso.
     private Long estudante_id;
-    // ID do curso de destino; o serviço confirma que pertence ao instrutor autenticado.
+    // ID do curso de destino; o controller confirma que pertence ao instrutor autenticado.
     private Long curso_id;
 
     public Long getUsuario_id() {

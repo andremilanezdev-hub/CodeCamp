@@ -53,6 +53,9 @@ export async function apiRequest(path, { method = "GET", body, token, auth = tru
     const errorMessage = responseData?.mensagem || responseData?.message || responseData?.error;
     const error = new Error(errorMessage || `Erro HTTP ${response.status}`);
     error.status = response.status;
+    if (auth && (response.status === 401 || response.status === 403)) {
+      logout();
+    }
     throw error;
   }
 

@@ -64,6 +64,7 @@ async function carregarEmpresaParaEdicao() {
     document.querySelector(".company-form-card__heading p").textContent = "Edite os dados cadastrais da empresa.";
     saveButton.textContent = "Salvar alterações";
   } catch (error) {
+    if (error.status === 401 || error.status === 403) return;
     mostrarMensagem(error.message || "Não foi possível carregar a empresa.", "error");
     saveButton.disabled = true;
   }
@@ -95,6 +96,7 @@ async function cadastrarEmpresa(event) {
     mostrarMensagem(resposta?.mensagem || (id ? "Empresa atualizada com sucesso!" : "Empresa cadastrada com sucesso!"), "success");
     if (!id) form.reset();
   } catch (error) {
+    if (error.status === 401 || error.status === 403) return;
     mostrarMensagem(error.message || "Não foi possível cadastrar a empresa.", "error");
   } finally {
     saveButton.disabled = false;

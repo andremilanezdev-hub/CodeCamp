@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/estudante")
+@Tag(name = "Estudantes", description = "Operações de consulta e gerenciamento de estudantes")
 @SecurityRequirement(name = "bearerAuth")
 // Define os endpoints HTTP para cadastrar, consultar e atualizar estudantes.
 public class EstudanteController {
@@ -24,6 +27,7 @@ public class EstudanteController {
 
     // GET /estudante: lista estudantes e converte as entidades para o DTO de consulta.
     @GetMapping
+    @Operation(summary = "Listar estudantes", description = "Retorna os estudantes cadastrados com seus dados de consulta.")
     public List<EstudanteConsultaResponse> ConsultaEstudante() {
         return estudanteRepository.findAll().stream()
                 .map(EstudanteConsultaResponse::new)
@@ -33,6 +37,7 @@ public class EstudanteController {
 
     // GET /estudante/{id}: consulta um estudante pelo ID; responde 404 se não existir.
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar estudante por ID", description = "Retorna os dados do estudante informado.")
     public ResponseEntity<EstudanteConsultaResponse> ConsultaEstudantePorID(@PathVariable Long id){
         var estudante = estudanteRepository.findById(id).orElse(null);
         if (estudante == null){
@@ -42,6 +47,7 @@ public class EstudanteController {
     }
     // POST /estudante: cadastra um estudante usando os dados recebidos no corpo da requisição.
     @PostMapping
+    @Operation(summary = "Cadastrar estudante", description = "Cadastra um estudante com os dados pessoais e de endereço enviados.")
     public ResponseEntity<EstudanteResponse>CadastrarEstudante(@RequestBody EstudanteRequest estudanteRequest){
         Estudante estudante = new Estudante();
         estudante.setNome(estudanteRequest.getNome());
@@ -64,6 +70,7 @@ public class EstudanteController {
 
     // PUT /estudante/{id}: atualiza os dados editáveis de um estudante existente.
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar estudante", description = "Atualiza os dados pessoais e de endereço do estudante informado.")
     public ResponseEntity<EstudanteResponse> AtualizarEstudante(@PathVariable Long id, @RequestBody EstudanteRequest estudanteRequest) {
         // Procura o estudante que será atualizado.
         Estudante estudante = estudanteRepository.findById(id).orElse(null);
@@ -89,6 +96,7 @@ public class EstudanteController {
 
     // PATCH /estudante/{id}/status: altera somente a situação do estudante.
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Atualizar status do estudante", description = "Altera o status do estudante para o valor enviado.")
     public ResponseEntity<EstudanteResponse> AtualizarStatusEstudante(@PathVariable Long id, @RequestBody AtualizaStatusEstudanteRequest estudanteRequest) {
 
         // Procura o estudante cuja situação será alterada.
@@ -105,6 +113,7 @@ public class EstudanteController {
 
     // DELETE /estudante/{id}: marca o cadastro como desativado, sem apagar o registro.
     @DeleteMapping("/{id}")
+    @Operation(summary = "Desativar estudante", description = "Desativa logicamente o estudante, preservando seu registro.")
     public ResponseEntity<EstudanteResponse> AtualizarStatus(@PathVariable Long id){
         // Procura o estudante que será desativado.
         Estudante estudante = estudanteRepository.findById(id).orElse(null);

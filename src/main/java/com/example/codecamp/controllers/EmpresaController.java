@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/empresas")
+@Tag(name = "Empresas", description = "Operações de consulta e gerenciamento de empresas")
 @SecurityRequirement(name = "bearerAuth")
 // Recebe as requisições HTTP relacionadas ao cadastro e à consulta de empresas.
 public class EmpresaController {
@@ -28,6 +31,7 @@ public class EmpresaController {
 
     // GET /empresas: lista empresas e converte cada entidade para o DTO de consulta.
     @GetMapping
+    @Operation(summary = "Listar empresas", description = "Retorna as empresas cadastradas com seus dados de consulta.")
     public List<EmpresaConsultaResponse> listarTodos(){
 
         return empresaRepository.findAll().stream().map(EmpresaConsultaResponse::new).toList();
@@ -35,6 +39,7 @@ public class EmpresaController {
 
     // GET /empresas/{id}: consulta os dados de uma empresa para preencher o formulário de edição.
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar empresa por ID", description = "Retorna os dados cadastrais da empresa informada.")
     public ResponseEntity<EmpresaConsultaResponse> buscarPorId(@PathVariable Long id) {
         var empresa = empresaRepository.findById(id).orElse(null);
         if (empresa == null) {
@@ -46,6 +51,7 @@ public class EmpresaController {
 
     // POST /empresas/criar: recebe os dados da empresa, salva no banco e devolve ID e mensagem.
     @PostMapping("/criar")
+    @Operation(summary = "Cadastrar empresa", description = "Cadastra uma empresa e retorna seu identificador.")
     public ResponseEntity<EmpresaResponse> cadastrarEmpresa(@RequestBody EmpresaRequest empresaRequest){
 
         // Cria a entidade e transfere para ela os dados recebidos no corpo da requisição.
@@ -72,6 +78,7 @@ public class EmpresaController {
 
     // PUT /empresas/{id}: atualiza os dados cadastrais sem substituir o registro existente.
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar empresa", description = "Atualiza os dados cadastrais da empresa informada.")
     public ResponseEntity<EmpresaResponse> atualizarEmpresa(
             @PathVariable Long id,
             @RequestBody EmpresaRequest empresaRequest) {
@@ -94,6 +101,7 @@ public class EmpresaController {
 
     // DELETE /empresas/{id}: desativa logicamente a empresa, preservando o registro e seus vínculos.
     @DeleteMapping("/{id}")
+    @Operation(summary = "Desativar empresa", description = "Desativa logicamente a empresa, preservando o registro e seus vínculos.")
     public ResponseEntity<EmpresaResponse> desativarEmpresa(@PathVariable Long id) {
         Empresa empresaBanco = empresaRepository.findById(id).orElse(null);
         if (empresaBanco == null) {
@@ -113,6 +121,7 @@ public class EmpresaController {
     // GET /empresas/cnpj/{cnpj}/usuarios: busca uma empresa pelo CNPJ e lista seus usuários.
     // @PathVariable obtém o CNPJ informado na URL.
     @GetMapping("/cnpj/{cnpj}/usuarios")
+    @Operation(summary = "Listar usuários da empresa por CNPJ", description = "Busca a empresa pelo CNPJ e retorna os usuários associados.")
     public ResponseEntity<List<UsuarioConsultaResponse>> buscarUsuariosPorCnpjEmpresa (@PathVariable String cnpj){
 
         // Consulta a empresa pelo CNPJ; se não existir, retorna HTTP 404.

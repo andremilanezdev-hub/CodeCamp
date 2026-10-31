@@ -10,6 +10,7 @@ com/example/codecamp/entities/Estudante.class
 com/example/codecamp/DTO/LoginRequest.class
 com/example/codecamp/service/InstrutorPermissaoService.class
 com/example/codecamp/repository/EmpresaRepository.class
+com/example/codecamp/service/ModuloService.class
 com/example/codecamp/controllers/LoginController.class
 com/example/codecamp/DTO/AtualizaStatusModuloRequest.class
 com/example/codecamp/DTO/EstudanteResponse.class
@@ -35,7 +36,6 @@ com/example/codecamp/DTO/EmpresaResponse.class
 com/example/codecamp/controllers/ModuloController.class
 com/example/codecamp/DTO/LoginResponse.class
 com/example/codecamp/controllers/EmpresaController.class
-com/example/codecamp/service/ViaCepService.class
 com/example/codecamp/config/CorsConfig.class
 com/example/codecamp/entities/Curso.class
 com/example/codecamp/config/OpenApiSecurityConfig.class

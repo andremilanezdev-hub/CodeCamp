@@ -7,9 +7,14 @@ import com.example.codecamp.DTO.UsuarioResponse;
 import com.example.codecamp.entities.Usuario;
 import com.example.codecamp.repository.EmpresaRepository;
 import com.example.codecamp.repository.UsuarioRepository;
+import com.example.codecamp.utils.CpfUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.time.LocalDateTime;
@@ -17,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+@Tag(name = "Usuários", description = "Operações de consulta e gerenciamento de usuários")
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
     //Palavra magica para limpar meemória e fechar
@@ -27,11 +33,19 @@ public class UsuarioController {
     private EmpresaRepository empresaRepository;
 
     @GetMapping
+    @Operation(
+            summary = "Listar usuários",
+            description = "Retorna a lista de usuários cadastrados com os dados de consulta."
+    )
     public List<UsuarioConsultaResponse> ConsultaUsuario() {
         return usuarioRepository.findAll().stream().map(UsuarioConsultaResponse::new).toList();
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Buscar usuário por ID",
+            description = "Retorna os dados do usuário correspondente ao identificador informado."
+    )
     public ResponseEntity<Usuario> ConsultaUsuarioPorID(@PathVariable Long id){
         var usuario = usuarioRepository.findById(id).orElse(null);
         if (usuario == null){
@@ -41,14 +55,34 @@ public class UsuarioController {
     }
 
     @GetMapping("/empresa/{empresaId}")
+    @Operation(
+            summary = "Consultar usuário por empresa",
+            description = "Consulta usuário associado ao identificador da empresa informado."
+    )
     public Usuario ConsultaUsuarioPorEmpresa(@PathVariable Long empresaId){
         Usuario usuarioContrutorCompleto =
                 new Usuario("Leandro","0213154545","03/05/1982");
         return  usuarioContrutorCompleto;
     }
 
+    /**
+     * Cadastra um instrutor associado à empresa informada na requisição.
+     * A validação do CPF ocorre no controller, junto ao fluxo de entrada já existente,
+     * para rejeitar dados inválidos antes de consultar ou persistir entidades.
+     *
+     * @param usuarioRequest dados enviados pelo cliente para o novo usuário
+     * @return identificador do usuário criado e mensagem de sucesso
+     * @throws ResponseStatusException com HTTP 400 quando o CPF for inválido
+     */
     @PostMapping
+    @Operation(
+            summary = "Cadastrar usuário",
+            description = "Valida o CPF e cadastra um usuário vinculado a uma empresa existente."
+    )
     public ResponseEntity<UsuarioResponse>CadastrarUsuario(@RequestBody UsuarioRequest usuarioRequest){
+
+        // Usa a regra de validação compartilhada já existente; CPF pode chegar formatado ou somente com dígitos.
+        validarCpf(usuarioRequest.getCpf());
 
         // Busca e valida a empresa
         var empresaBanco = empresaRepository.findById(usuarioRequest.getEmpresa_id()).orElse(null);
@@ -74,7 +108,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Atualizar usuário",
+            description = "Atualiza os dados do usuário informado. Uma senha vazia mantém a senha atual."
+    )
     public ResponseEntity<UsuarioResponse> AtualizarUsuario(@PathVariable Long id, @RequestBody UsuarioRequest usuarioRequest) {
+
+        // A edição também pode substituir o CPF, portanto aplica a mesma validação antes de persistir.
+        validarCpf(usuarioRequest.getCpf());
 
         //Consuta no banco
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
@@ -104,7 +145,25 @@ public class UsuarioController {
 
     }
 
+    /**
+     * Confere o CPF informado utilizando exclusivamente o utilitário existente no projeto.
+     * Lança uma exceção HTTP 400 para que o cliente receba uma resposta de requisição inválida,
+     * em vez de permitir que um documento incorreto seja gravado.
+     *
+     * @param cpf CPF recebido no corpo da requisição, formatado ou não
+     * @throws ResponseStatusException quando o valor não passar na validação de CPF
+     */
+    private void validarCpf(String cpf) {
+        if (!CpfUtils.isValidCpf(cpf)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF inválido");
+        }
+    }
+
     @PatchMapping("/{id}/status")
+    @Operation(
+            summary = "Atualizar status do usuário",
+            description = "Altera o status do usuário para o valor enviado na requisição."
+    )
     public ResponseEntity<UsuarioResponse> AtualizarUsuario(@PathVariable Long id, @RequestBody AtualizaStatusUsuarioRequest usuarioRequest) {
 
         //Consuta no banco
@@ -123,6 +182,10 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Desativar usuário",
+            description = "Desativa logicamente o usuário informado, preservando o registro no banco."
+    )
     public ResponseEntity<UsuarioResponse> AtualizarStatus(@PathVariable Long id){
         //Consuta no banco
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);

@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.codecamp.DTO.LoginRequest;
 import com.example.codecamp.DTO.LoginResponse;
 import com.example.codecamp.repository.UsuarioRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 
 @RestController
 @RequestMapping("/login")
+@Tag(name = "Autenticação", description = "Operações de autenticação e emissão de token")
 public class LoginController {
 
     @Autowired
@@ -37,6 +40,7 @@ public class LoginController {
     private Long tempo;
 
     @PostMapping
+    @Operation(summary = "Entrar", description = "Valida as credenciais do usuário e retorna um token JWT quando forem válidas.")
     public ResponseEntity<LoginResponse> logar(@RequestBody LoginRequest loginRequest)  {
 
 //        Usuario usuarioBanco = usuarioRepository.findAll().stream().filter(usuario -> usuario.getCpf())
