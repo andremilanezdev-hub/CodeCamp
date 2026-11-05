@@ -20,31 +20,48 @@ function getTokenSubject() {
   try {
     const payloadPart = localStorage.getItem("token")?.split(".")[1];
     if (!payloadPart) return null;
+
     const base64 = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "="))).sub ?? null;
+    const payload = JSON.parse(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "=")));
+    return payload.sub ?? null;
   } catch {
     return null;
   }
 }
 
+function normalizarCpf(cpf) {
+  return String(cpf ?? "").replace(/\D/g, "");
+}
+
 async function identificarInstrutor() {
-  const cpf = getTokenSubject();
-  if (!cpf) {
+  const cpfAutenticado = getTokenSubject();
+  if (!cpfAutenticado) {
     setMessage("Sessão não encontrada. Entre novamente.", "error");
     return;
   }
+
   try {
+    // UsuarioController devolve uma lista com id e cpf; o ID é exigido pelo POST /curso.
     const usuarios = await apiRequest("/usuarios");
-    const lista = Array.isArray(usuarios) ? usuarios : [];
-    const cpfNormalizado = String(cpf).replace(/\D/g, "");
-    const instrutor = lista.find((usuario) => String(usuario.cpf ?? "").replace(/\D/g, "") === cpfNormalizado);
-    if (!instrutor?.id) throw new Error("Não foi possível identificar o instrutor autenticado.");
-    instructorInput.value = instrutor.id;
-    if (requestedCourseId) await carregarCursoParaEdicao(instrutor.id);
-    else saveButton.disabled = false;
-    if (!requestedCourseId) setMessage(`Curso será cadastrado por ${instrutor.nome}.`);
+    const instrutor = (Array.isArray(usuarios) ? usuarios : []).find(
+      (usuario) => normalizarCpf(usuario.cpf) === normalizarCpf(cpfAutenticado),
+    );
+
+    if (!instrutor?.id) {
+      throw new Error("Não foi possível identificar o usuário associado à sessão.");
+    }
+
+    instructorInput.value = String(instrutor.id);
+
+    if (requestedCourseId) {
+      await carregarCursoParaEdicao(instrutor.id);
+    } else {
+      saveButton.disabled = false;
+      setMessage(`Curso será cadastrado por ${instrutor.nome}.`);
+    }
   } catch (error) {
     setMessage(error.message || "Falha ao identificar o instrutor.", "error");
+    saveButton.disabled = true;
   }
 }
 
@@ -54,7 +71,8 @@ async function carregarCursoParaEdicao(idInstrutor) {
     if (String(curso.usuarioCadastro?.id) !== String(idInstrutor)) {
       throw new Error("Você só pode editar cursos cadastrados por você.");
     }
-    courseIdInput.value = curso.id;
+
+    courseIdInput.value = String(curso.id);
     nameInput.value = curso.nome ?? "";
     hoursInput.value = curso.cargahoraria ?? "";
     pageTitle.textContent = `Editar curso #${curso.id}`;
@@ -64,36 +82,68 @@ async function carregarCursoParaEdicao(idInstrutor) {
     setMessage("Edite os dados do curso e salve as alterações.");
   } catch (error) {
     setMessage(error.message || "Não foi possível carregar o curso.", "error");
+    saveButton.disabled = true;
   }
+}
+
+function obterDadosCurso() {
+  const nome = nameInput.value.trim();
+  const cargaHoraria = Number(hoursInput.value);
+  const usuarioId = Number(instructorInput.value);
+
+  if (!nome) {
+    setMessage("Informe o nome do curso.", "error");
+    nameInput.focus();
+    return null;
+  }
+
+  if (!Number.isInteger(cargaHoraria) || cargaHoraria <= 0) {
+    setMessage("Informe uma carga horária inteira maior que zero.", "error");
+    hoursInput.focus();
+    return null;
+  }
+
+  if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+    setMessage("Não foi possível identificar o instrutor autenticado. Entre novamente.", "error");
+    return null;
+  }
+
+  // O cadastro usa estes campos de CursoRequest; o CPF autenticado chega ao backend pelo JWT.
+  return {
+    nome,
+    cargahoraria: cargaHoraria,
+    usuario_id: usuarioId,
+  };
 }
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!instructorInput.value || !nameInput.value.trim() || Number(hoursInput.value) <= 0) {
-    setMessage("Informe o nome, a carga horária e aguarde a identificação do instrutor.", "error");
-    return;
-  }
+  const dadosCurso = obterDadosCurso();
+  if (!dadosCurso) return;
 
   saveButton.disabled = true;
   saveButton.textContent = "Salvando...";
+
+  const cursoId = courseIdInput.value;
   try {
-    const id = courseIdInput.value;
-    const resposta = await apiRequest(id ? `/curso/${encodeURIComponent(id)}` : "/curso", {
-      method: id ? "PUT" : "POST",
-      body: {
-        nome: nameInput.value.trim(),
-        cargahoraria: Number(hoursInput.value),
-        usuario_id: Number(instructorInput.value),
+    const resposta = await apiRequest(
+      cursoId ? `/curso/${encodeURIComponent(cursoId)}` : "/curso",
+      {
+        method: cursoId ? "PUT" : "POST",
+        body: dadosCurso,
       },
-    });
-    setMessage(resposta?.mensagem || (id ? "Curso atualizado com sucesso." : "Curso cadastrado com sucesso."), "success");
-    if (!id) {
-      const instructorId = instructorInput.value;
+    );
+
+    const mensagemSucesso = resposta?.mensagem
+      || (cursoId ? "Curso atualizado com sucesso." : "Curso cadastrado com sucesso.");
+    setMessage(mensagemSucesso, "success");
+
+    if (!cursoId) {
       form.reset();
-      instructorInput.value = instructorId;
+      instructorInput.value = String(dadosCurso.usuario_id);
     }
   } catch (error) {
-    setMessage(error.message || "Não foi possível cadastrar o curso.", "error");
+    setMessage(error.message || "Não foi possível salvar o curso.", "error");
   } finally {
     saveButton.textContent = courseIdInput.value ? "Salvar alterações" : "Salvar curso";
     saveButton.disabled = !instructorInput.value;

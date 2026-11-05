@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Acompanhamento | CodeCamp</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/acompanhamento.css">
+    <link rel="stylesheet" href="css/global.css">
+  </head>
+  <body class="gradient-bg">
+    <aside class="sidebar" aria-label="Menu principal">
+      <a class="brand" href="dashboard.html" aria-label="CodeCamp, página inicial">
+        <span class="brand__mark" aria-hidden="true">CC</span>
+        <span>CodeCamp</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="sidebar__links">
+          <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
+          <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
+          <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
+          <li><a class="sidebar__link" href="acompanhamento.html" aria-current="page">Conclusões</a></li>
+          <li><a class="sidebar__link" href="empresas.html">Empresas</a></li>
+          <li><a class="sidebar__link" href="enderecos.html">Consultar CEP</a></li>
+        </ul>
+      </nav>
+      <button class="sidebar__logout" type="button">Sair</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="main-content__inner progress-page">
+        <header class="progress-header">
+          <p class="progress-eyebrow">Gestão acadêmica</p>
+          <h1>Acompanhamento de módulos</h1>
+          <p>Registre a conclusão dos módulos e consulte o código de validação emitido ao concluir o curso.</p>
+        </header>
+
+        <section class="progress-card glass" aria-labelledby="progress-selection-title">
+          <div class="progress-card__heading">
+            <h2 id="progress-selection-title">Selecione o curso e o estudante</h2>
+            <p>São exibidos os cursos cadastrados por você e os estudantes matriculados em cada curso.</p>
+          </div>
+          <div class="progress-selection">
+            <div class="progress-field">
+              <label for="progress-course">Curso</label>
+              <select id="progress-course" required disabled>
+                <option value="">Carregando cursos...</option>
+              </select>
+            </div>
+            <div class="progress-field">
+              <label for="progress-student">Estudante</label>
+              <select id="progress-student" required disabled>
+                <option value="">Selecione primeiro um curso</option>
+              </select>
+            </div>
+          </div>
+          <p id="progress-feedback" class="progress-feedback" role="status" aria-live="polite">Carregando dados...</p>
+        </section>
+
+        <section class="progress-card glass" aria-labelledby="modules-title">
+          <div class="progress-card__heading">
+            <h2 id="modules-title">Módulos do curso</h2>
+            <p id="modules-description">Selecione um curso e um estudante para carregar os módulos.</p>
+          </div>
+          <div id="modules-list" class="progress-modules" aria-live="polite">
+            <p class="progress-empty">Aguardando seleção.</p>
+          </div>
+        </section>
+
+        <section id="certificate-card" class="certificate-card glass" aria-labelledby="certificate-title" hidden>
+          <div>
+            <p class="progress-eyebrow">Curso concluído</p>
+            <h2 id="certificate-title">Código de validação do certificado</h2>
+            <p id="certificate-message" class="certificate-message"></p>
+          </div>
+          <code id="certificate-code" class="certificate-code"></code>
+        </section>
+
+        <p class="progress-note">
+          O endpoint atual registra conclusões e devolve o resultado da operação. A consulta de conclusões anteriores ainda não está disponível na API.
+        </p>
+      </div>
+    </main>
+
+    <script type="module" src="js/acompanhamento.js"></script>
+    <script type="module" src="js/logout.js"></script>
+  </body>
+</html>

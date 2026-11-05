@@ -17,6 +17,8 @@ public interface ModuloRepository extends JpaRepository<Modulo,Long> {
      */
     List<Modulo> findAllByCurso_Id(Long cursoId);
 
+    long countByCurso_Id(Long cursoId);
+
     //Retorna um registro
     Optional<Modulo> getModuloByNome(String nome);
     Optional<Modulo> getMOduloById(Long id);

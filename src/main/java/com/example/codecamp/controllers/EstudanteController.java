@@ -3,6 +3,8 @@ package com.example.codecamp.controllers;
 import com.example.codecamp.DTO.*;
 import com.example.codecamp.entities.Estudante;
 import com.example.codecamp.repository.EstudanteRepository;
+import com.example.codecamp.service.ConclusaoModuloService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ public class EstudanteController {
     @Autowired
 
     private EstudanteRepository estudanteRepository;
+    @Autowired
+    private ConclusaoModuloService conclusaoModuloService;
 
     // GET /estudante: lista estudantes e converte as entidades para o DTO de consulta.
     @GetMapping
@@ -127,6 +131,16 @@ public class EstudanteController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/modulos/conclusao")
+    @Operation(
+            summary = "Concluir módulo do estudante",
+            description = "Registra a conclusão de um módulo e emite um código de certificado quando todos os módulos do curso estiverem concluídos."
+    )
+    public ResponseEntity<ConclusaoModuloResponse> concluirModulo(
+            @Valid @RequestBody ConcluirModuloRequest request) {
+        return ResponseEntity.ok(conclusaoModuloService.concluirModulo(request));
     }
 
 }
