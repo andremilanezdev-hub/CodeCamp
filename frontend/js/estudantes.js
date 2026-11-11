@@ -53,7 +53,14 @@ function formatarData(valor) {
   }
 
   if (Number.isNaN(data.getTime())) return String(valor);
-  return data.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(data);
 }
 
 function normalizarStatus(status) {

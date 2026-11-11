@@ -1,5 +1,11 @@
 import { apiRequest } from "./api.js";
-import { formatarCpf, instalarMascaras, somenteDigitos } from "./mascaras.js";
+import {
+  dataBrasileiraParaIso,
+  formatarCpf,
+  formatarDataBrasileira,
+  instalarMascaras,
+  somenteDigitos,
+} from "./mascaras.js";
 
 const form = document.querySelector("#user-registration-form");
 const nameInput = document.querySelector("#user-name");
@@ -105,7 +111,7 @@ async function carregarUsuarioParaEdicao() {
     userIdInput.value = usuario.id;
     nameInput.value = usuario.nome ?? "";
     cpfInput.value = formatarCpf(usuario.cpf);
-    birthDateInput.value = String(usuario.dataNascimento ?? "").slice(0, 10);
+    birthDateInput.value = formatarDataBrasileira(usuario.dataNascimento);
     companySelect.value = String(usuario.empresa_id ?? "");
     pageTitle.textContent = `Editar professor #${usuario.id}`;
     document.querySelector("#user-form-title").textContent = "Atualizar dados do professor";
@@ -139,6 +145,12 @@ function validarFormulario() {
     return false;
   }
 
+  if (!dataBrasileiraParaIso(birthDateInput.value)) {
+    mostrarMensagem("Informe uma data válida no formato dd/mm/aaaa.", "error");
+    birthDateInput.focus();
+    return false;
+  }
+
   if (!userIdInput.value && !passwordInput.value.trim()) {
     mostrarMensagem("Informe a senha para o novo professor.", "error");
     passwordInput.focus();
@@ -166,7 +178,7 @@ async function cadastrarUsuario(event) {
     nome: nameInput.value.trim(),
     // UsuarioRequest espera cpf, dataNascimento, senha e empresa_id.
     cpf: somenteDigitos(cpfInput.value),
-    dataNascimento: birthDateInput.value,
+    dataNascimento: dataBrasileiraParaIso(birthDateInput.value),
     senha: passwordInput.value,
     empresa_id: Number(companySelect.value),
   };

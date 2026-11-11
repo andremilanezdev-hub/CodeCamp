@@ -1,5 +1,5 @@
 import { apiRequest } from "./api.js";
-import { formatarCpf } from "./mascaras.js";
+import { formatarCpf, formatarDataBrasileira } from "./mascaras.js";
 
 const currentPage = window.location.pathname.split("/").pop();
 const navigationLinks = document.querySelectorAll(".sidebar__link");
@@ -76,7 +76,7 @@ function exibirUsuarios(usuarios) {
     row.append(
       criarCelula(usuario.nome),
       criarCelula(formatarCpf(usuario.cpf)),
-      criarCelula(usuario.dataNascimento),
+      criarCelula(formatarDataBrasileira(usuario.dataNascimento)),
       criarCelula(obterNomeEmpresa(usuario)),
       statusCell,
     );

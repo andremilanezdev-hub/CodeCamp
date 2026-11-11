@@ -39,11 +39,47 @@ export function formatarTelefone(valor) {
   return `(${ddd}) ${numeroFormatado}`;
 }
 
+function mascararData(valor) {
+  const digitos = somenteDigitos(valor).slice(0, 8);
+  if (digitos.length <= 2) return digitos;
+  if (digitos.length <= 4) return `${digitos.slice(0, 2)}/${digitos.slice(2)}`;
+  return `${digitos.slice(0, 2)}/${digitos.slice(2, 4)}/${digitos.slice(4)}`;
+}
+
+/** Exibe datas ISO (ou valores de data) no formato brasileiro dd/MM/aaaa. */
+export function formatarDataBrasileira(valor) {
+  if (valor === null || valor === undefined || valor === "") return "";
+  const texto = String(valor).trim();
+  const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
+  return mascararData(texto);
+}
+
+/** Converte uma data brasileira válida para o formato ISO aceito pelo formulário atual. */
+export function dataBrasileiraParaIso(valor) {
+  const correspondencia = String(valor ?? "").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!correspondencia) return null;
+
+  const [, diaTexto, mesTexto, anoTexto] = correspondencia;
+  const dia = Number(diaTexto);
+  const mes = Number(mesTexto);
+  const ano = Number(anoTexto);
+  const data = new Date(0);
+  data.setUTCHours(0, 0, 0, 0);
+  data.setUTCFullYear(ano, mes - 1, dia);
+  if (data.getUTCFullYear() !== ano || data.getUTCMonth() !== mes - 1 || data.getUTCDate() !== dia) {
+    return null;
+  }
+  return `${anoTexto}-${mesTexto}-${diaTexto}`;
+}
+
 const formatos = {
   cpf: { formatar: formatarCpf, maxDigitos: 11 },
   cnpj: { formatar: formatarCnpj, maxDigitos: 14 },
   cep: { formatar: formatarCep, maxDigitos: 8 },
   telefone: { formatar: formatarTelefone, maxDigitos: 11 },
+  data: { formatar: mascararData, maxDigitos: 8 },
 };
 
 /** Liga a máscara indicada por data-mascara sem alterar o contrato JSON da API. */
