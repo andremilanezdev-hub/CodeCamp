@@ -7,7 +7,7 @@ export function salvarToken(token) {
   localStorage.setItem(TOKEN_KEY, token);
 }
 
-/** Remove o JWT local e encaminha o usuário de volta ao login. */
+/** Remove o JWT local e encaminha o professor de volta ao login. */
 export function logout() {
   localStorage.removeItem(TOKEN_KEY);
   window.location.assign("index.html");
@@ -50,7 +50,9 @@ export async function apiRequest(path, { method = "GET", body, token, auth = tru
   }
 
   if (!response.ok) {
-    const errorMessage = responseData?.mensagem || responseData?.message || responseData?.error;
+    // Spring ResponseStatusException costuma devolver o motivo em `detail`.
+    const errorMessage = responseData?.mensagem || responseData?.message
+      || responseData?.detail || responseData?.error;
     const error = new Error(errorMessage || `Erro HTTP ${response.status}`);
     error.status = response.status;
     if (auth && (response.status === 401 || response.status === 403)) {

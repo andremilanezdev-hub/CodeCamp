@@ -17,7 +17,7 @@ newCompanyButton?.addEventListener("click", () => {
   window.location.assign("empresa-cadastro.html");
 });
 
-// A consulta de usuários fica recolhida até uma empresa ser selecionada, mantendo
+// A consulta de professores fica recolhida até uma empresa ser selecionada, mantendo
 // a listagem principal limpa e apresentando o resultado dentro do próprio fluxo.
 closeCompanyUsersButton?.addEventListener("click", () => {
   companyUsersSection.hidden = true;
@@ -104,7 +104,7 @@ function exibirEmpresas(empresas) {
     const usersButton = document.createElement("button");
     usersButton.type = "button";
     usersButton.className = "action-button";
-    usersButton.textContent = "Ver usuários";
+    usersButton.textContent = "Ver professores";
     usersButton.addEventListener("click", () => buscarUsuariosDaEmpresa(empresa, usersButton));
     actions.append(usersButton);
     actionsCell.append(actions);
@@ -141,30 +141,30 @@ async function buscarUsuariosDaEmpresa(empresa, button) {
     );
     exibirUsuariosDaEmpresa(empresa, usuariosDaEmpresa);
   } catch (error) {
-    companiesFeedback.textContent = error.message || "Não foi possível consultar os usuários desta empresa.";
+    companiesFeedback.textContent = error.message || "Não foi possível consultar os professores desta empresa.";
     companiesFeedback.classList.add("companies-feedback--error");
   } finally {
     button.disabled = false;
-    button.textContent = "Ver usuários";
+    button.textContent = "Ver professores";
   }
 }
 
-// Renderiza os usuários como cards: cada registro tem espaço para seus dados e
+// Renderiza os professores como cards: cada registro tem espaço para seus dados e
 // pode ser lido em telas estreitas sem transformar a resposta em uma caixa modal.
 function exibirUsuariosDaEmpresa(empresa, usuarios) {
   const nomeEmpresa = empresa.nomeFantasia || empresa.razaoSocial || "Empresa";
-  companyUsersTitle.textContent = `Usuários de ${nomeEmpresa}`;
+  companyUsersTitle.textContent = `Professores de ${nomeEmpresa}`;
   companyUsersGrid.replaceChildren();
 
   if (usuarios.length === 0) {
     const estadoVazio = document.createElement("p");
     estadoVazio.className = "company-users-empty";
-    estadoVazio.textContent = "Esta empresa não possui usuários cadastrados.";
+    estadoVazio.textContent = "Esta empresa não possui professores cadastrados.";
     companyUsersGrid.append(estadoVazio);
-    companyUsersSummary.textContent = "Nenhum usuário encontrado";
+    companyUsersSummary.textContent = "Nenhum professor encontrado";
   } else {
     usuarios.forEach((usuario) => companyUsersGrid.append(criarCartaoUsuario(usuario)));
-    companyUsersSummary.textContent = `${usuarios.length} usuário(s) cadastrado(s)`;
+    companyUsersSummary.textContent = `${usuarios.length} professor(es) cadastrado(s)`;
   }
 
   companyUsersSection.hidden = false;
@@ -180,7 +180,7 @@ function criarCartaoUsuario(usuario) {
   const cabecalho = document.createElement("div");
   cabecalho.className = "company-user-card__header";
   const nome = document.createElement("h3");
-  nome.textContent = usuario.nome || "Usuário sem nome";
+  nome.textContent = usuario.nome || "Professor sem nome";
   const statusTexto = formatarStatusUsuario(usuario.status);
   const status = document.createElement("span");
   status.className = `company-user-status ${statusTexto.ativo ? "company-user-status--active" : "company-user-status--inactive"}`;

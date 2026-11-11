@@ -16,7 +16,7 @@ const passwordHelp = document.querySelector("#password-help");
 const requestedUserId = new URLSearchParams(window.location.search).get("id");
 instalarMascaras();
 
-// Destaca Usuários no menu mesmo nesta tela secundária de cadastro.
+// Destaca Professores no menu mesmo nesta tela secundária de cadastro.
 document.querySelectorAll(".sidebar__link").forEach((link) => {
   if (link.getAttribute("href") === "usuarios.html") {
     link.classList.add("active");
@@ -33,6 +33,24 @@ function mostrarMensagem(texto, tipo = "") {
 function nomeDaEmpresa(empresa) {
   if (!empresa || typeof empresa !== "object") return "";
   return empresa.nomeFantasia || empresa.razaoSocial || `Empresa #${empresa.id}`;
+}
+
+// Espelha a validação de CpfUtils para evitar o HTTP 400 do UsuarioController.
+function cpfValido(cpf) {
+  const digitos = somenteDigitos(cpf);
+  if (digitos.length !== 11 || /^(\d)\1{10}$/.test(digitos)) return false;
+
+  const calcularDigito = (tamanho, pesoInicial) => {
+    let soma = 0;
+    for (let indice = 0; indice < tamanho; indice += 1) {
+      soma += Number(digitos[indice]) * (pesoInicial - indice);
+    }
+    const resto = soma % 11;
+    return resto < 2 ? 0 : 11 - resto;
+  };
+
+  return calcularDigito(9, 10) === Number(digitos[9])
+    && calcularDigito(10, 11) === Number(digitos[10]);
 }
 
 async function carregarEmpresas() {
@@ -60,7 +78,7 @@ async function carregarEmpresas() {
 
     if (companySelect.options.length === 1) {
       companySelect.replaceChildren(new Option("Nenhuma empresa disponível", ""));
-      companyHelp.textContent = "Cadastre uma empresa antes de adicionar um usuário.";
+      companyHelp.textContent = "Cadastre uma empresa antes de adicionar um professor.";
       saveButton.disabled = true;
       return;
     }
@@ -82,20 +100,20 @@ async function carregarUsuarioParaEdicao() {
     const resposta = await apiRequest("/usuarios");
     const usuarios = Array.isArray(resposta) ? resposta : [];
     const usuario = usuarios.find((item) => String(item.id) === String(requestedUserId));
-    if (!usuario) throw new Error("Usuário não encontrado.");
+    if (!usuario) throw new Error("Professor não encontrado.");
 
     userIdInput.value = usuario.id;
     nameInput.value = usuario.nome ?? "";
     cpfInput.value = formatarCpf(usuario.cpf);
     birthDateInput.value = String(usuario.dataNascimento ?? "").slice(0, 10);
     companySelect.value = String(usuario.empresa_id ?? "");
-    pageTitle.textContent = `Editar usuário #${usuario.id}`;
-    document.querySelector("#user-form-title").textContent = "Atualizar dados do usuário";
+    pageTitle.textContent = `Editar professor #${usuario.id}`;
+    document.querySelector("#user-form-title").textContent = "Atualizar dados do professor";
     passwordInput.required = false;
     passwordHelp.textContent = "Deixe vazia para manter a senha atual ou informe uma nova senha.";
     saveButton.textContent = "Salvar alterações";
   } catch (error) {
-    mostrarMensagem(error.message || "Não foi possível carregar o usuário.", "error");
+    mostrarMensagem(error.message || "Não foi possível carregar o professor.", "error");
     saveButton.disabled = true;
   }
 }
@@ -122,13 +140,13 @@ function validarFormulario() {
   }
 
   if (!userIdInput.value && !passwordInput.value.trim()) {
-    mostrarMensagem("Informe a senha para o novo usuário.", "error");
+    mostrarMensagem("Informe a senha para o novo professor.", "error");
     passwordInput.focus();
     return false;
   }
 
-  if (somenteDigitos(cpfInput.value).length !== 11) {
-    mostrarMensagem("Informe um CPF com 11 dígitos.", "error");
+  if (!cpfValido(cpfInput.value)) {
+    mostrarMensagem("Informe um CPF válido. Confira os 11 dígitos e os dígitos verificadores.", "error");
     cpfInput.focus();
     return false;
   }
@@ -146,6 +164,7 @@ async function cadastrarUsuario(event) {
   const id = userIdInput.value;
   const dadosUsuario = {
     nome: nameInput.value.trim(),
+    // UsuarioRequest espera cpf, dataNascimento, senha e empresa_id.
     cpf: somenteDigitos(cpfInput.value),
     dataNascimento: birthDateInput.value,
     senha: passwordInput.value,
@@ -157,12 +176,12 @@ async function cadastrarUsuario(event) {
       method: id ? "PUT" : "POST",
       body: dadosUsuario,
     });
-    mostrarMensagem(resposta?.mensagem || (id ? "Usuário atualizado com sucesso!" : "Usuário cadastrado com sucesso!"), "success");
+    mostrarMensagem(resposta?.mensagem || (id ? "Professor atualizado com sucesso!" : "Professor cadastrado com sucesso!"), "success");
     if (!id) form.reset();
   } catch (error) {
-    mostrarMensagem(error.message || "Não foi possível cadastrar o usuário.", "error");
+    mostrarMensagem(error.message || "Não foi possível cadastrar o professor.", "error");
   } finally {
-    saveButton.textContent = userIdInput.value ? "Salvar alterações" : "Salvar usuário";
+    saveButton.textContent = userIdInput.value ? "Salvar alterações" : "Salvar professor";
     saveButton.disabled = companySelect.disabled || companySelect.options.length <= 1;
   }
 }

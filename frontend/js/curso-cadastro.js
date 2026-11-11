@@ -48,7 +48,7 @@ async function identificarInstrutor() {
     );
 
     if (!instrutor?.id) {
-      throw new Error("Não foi possível identificar o usuário associado à sessão.");
+      throw new Error("Não foi possível identificar o professor associado à sessão.");
     }
 
     instructorInput.value = String(instrutor.id);

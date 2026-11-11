@@ -16,6 +16,18 @@ let courses = [];
 let modules = [];
 const completionByStudentCourse = new Map();
 const pendingModules = new Set();
+const finishedCoursesKey = "codecamp.cursosFinalizados";
+
+function registrarCursoFinalizado(cursoId) {
+  try {
+    const registros = JSON.parse(localStorage.getItem(finishedCoursesKey) || "[]");
+    const cursosFinalizados = new Set(Array.isArray(registros) ? registros.map(String) : []);
+    cursosFinalizados.add(String(cursoId));
+    localStorage.setItem(finishedCoursesKey, JSON.stringify([...cursosFinalizados]));
+  } catch {
+    // A conclusão permanece registrada no backend; o dashboard pode não refletir este navegador.
+  }
+}
 
 navigationLinks.forEach((link) => {
   if (link.getAttribute("href").split("/").pop() === currentPage) {
@@ -221,7 +233,7 @@ async function carregarDados() {
       apiRequest("/usuarios"),
     ]);
     courses = obterLista(respostaCursos, "cursos");
-    const usuarios = obterLista(respostaUsuarios, "usuários");
+    const usuarios = obterLista(respostaUsuarios, "professores");
     const instrutor = usuarios.find((user) => normalizarCpf(user.cpf) === normalizarCpf(cpfToken));
 
     if (!instrutor?.id) throw new Error("Não foi possível identificar o instrutor da sessão.");
@@ -265,6 +277,7 @@ async function registrarConclusao(moduloId, button) {
     exibirCertificado(response);
 
     const cursoConcluido = response.curso_concluido ?? response.cursoConcluido ?? false;
+    if (cursoConcluido) registrarCursoFinalizado(cursoId);
     mostrarFeedback(response.mensagem || (cursoConcluido
       ? "Curso concluído. O código do certificado foi emitido."
       : "Módulo marcado como concluído."), "success");

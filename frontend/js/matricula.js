@@ -32,7 +32,7 @@ function normalizarCpf(cpf) {
 }
 
 /**
- * Lê o subject do JWT apenas para localizar o ID do instrutor na lista de usuários.
+ * Lê o subject do JWT apenas para localizar o ID do instrutor na lista de professores.
  * A validação de confiança e de propriedade continua sendo feita pelo backend.
  */
 function obterCpfDoToken() {
@@ -130,7 +130,7 @@ async function carregarDados() {
 
     courses = obterLista(respostaCursos, "cursos");
     students = obterLista(respostaEstudantes, "estudantes");
-    const usuarios = obterLista(respostaUsuarios, "usuários");
+    const usuarios = obterLista(respostaUsuarios, "professores");
     const instrutor = usuarios.find((user) =>
       normalizarCpf(user.cpf) === normalizarCpf(cpfToken));
 

@@ -12,7 +12,7 @@ addUserButton?.addEventListener("click", () => {
   window.location.assign("usuario-cadastro.html");
 });
 
-// Destaca Usuários no menu lateral enquanto esta página estiver aberta.
+// Destaca Professores no menu lateral enquanto esta página estiver aberta.
 navigationLinks.forEach((link) => {
   if (link.getAttribute("href").split("/").pop() === currentPage) {
     link.classList.add("active");
@@ -55,12 +55,12 @@ function exibirUsuarios(usuarios) {
 
   if (usuarios.length === 0) {
     const row = document.createElement("tr");
-    const cell = criarCelula("Nenhum usuário cadastrado.");
+    const cell = criarCelula("Nenhum professor cadastrado.");
     cell.colSpan = 6;
     cell.classList.add("users-table__placeholder");
     row.append(cell);
     usersTableBody.append(row);
-    usersFeedback.textContent = "0 usuários";
+    usersFeedback.textContent = "0 professores";
     return;
   }
 
@@ -104,14 +104,14 @@ function exibirUsuarios(usuarios) {
     usersTableBody.append(row);
   });
 
-  usersFeedback.textContent = `${usuarios.length} usuário(s)`;
+  usersFeedback.textContent = `${usuarios.length} professor(es)`;
 }
 
 async function carregarUsuarios() {
   try {
     // Lê os campos nome, cpf, status e empresa conforme o JSON da API.
     const resposta = await apiRequest("/usuarios");
-    // O endpoint pode responder com um usuário ou com uma lista de usuários.
+    // O endpoint pode responder com um professor ou com uma lista de professores.
     const usuarios = Array.isArray(resposta)
       ? resposta
       : resposta && typeof resposta === "object"
@@ -126,7 +126,7 @@ async function carregarUsuarios() {
   } catch (error) {
     usersTableBody.replaceChildren();
     const row = document.createElement("tr");
-    const cell = criarCelula("Não foi possível carregar os usuários.");
+    const cell = criarCelula("Não foi possível carregar os professores.");
     cell.colSpan = 6;
     cell.classList.add("users-table__placeholder");
     row.append(cell);
@@ -138,7 +138,7 @@ async function carregarUsuarios() {
 
 async function alterarStatusUsuario(usuario, button, estaAtivo) {
   const acao = estaAtivo ? "desativar" : "ativar";
-  if (estaAtivo && !window.confirm(`Deseja desativar o usuário “${usuario.nome}”?`)) return;
+  if (estaAtivo && !window.confirm(`Deseja desativar o professor “${usuario.nome}”?`)) return;
   button.disabled = true;
   try {
     if (estaAtivo) {
@@ -152,7 +152,7 @@ async function alterarStatusUsuario(usuario, button, estaAtivo) {
     }
     await carregarUsuarios();
   } catch (error) {
-    usersFeedback.textContent = error.message || `Não foi possível ${acao} o usuário.`;
+    usersFeedback.textContent = error.message || `Não foi possível ${acao} o professor.`;
     usersFeedback.classList.add("users-feedback--error");
     button.disabled = false;
   }

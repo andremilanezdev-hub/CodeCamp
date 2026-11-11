@@ -20,7 +20,7 @@
         <ul class="sidebar__links">
           <li><a class="sidebar__link" href="cursos.html">Cursos</a></li>
           <li><a class="sidebar__link" href="modulos.html">Módulos</a></li>
-          <li><a class="sidebar__link" href="usuarios.html">Usuários</a></li>
+          <li><a class="sidebar__link" href="usuarios.html">Professores</a></li>
           <li><a class="sidebar__link" href="estudantes.html">Estudantes</a></li>
           <li><a class="sidebar__link" href="matricula.html">Matrículas</a></li>
           <li><a class="sidebar__link" href="acompanhamento.html">Conclusões</a></li>
@@ -35,7 +35,49 @@
       <div class="main-content__inner">
         <h1>Bem-vindo ao CodeCamp</h1>
         <section class="scroll-sample glass" aria-label="Apresentação do CodeCamp">
-          <p>Gerencie cursos, módulos, usuários, estudantes e empresas pelos links do menu.</p>
+          <p>Gerencie cursos, módulos, professores, estudantes e empresas pelos links do menu.</p>
+        </section>
+        <section class="dashboard-section" aria-labelledby="summary-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Visão geral</p>
+              <h2 id="summary-title">Resumo da plataforma</h2>
+            </div>
+            <p id="summary-status" class="summary-status" role="status" aria-live="polite">Carregando indicadores...</p>
+          </div>
+          <div class="summary-grid" aria-label="Indicadores gerais">
+            <article class="summary-card glass">
+              <span class="summary-card__label">Cursos cadastrados</span>
+              <strong id="total-courses" class="summary-card__value">—</strong>
+              <span class="summary-card__hint">Cursos disponíveis na plataforma</span>
+            </article>
+            <article class="summary-card glass">
+              <span class="summary-card__label">Alunos cadastrados</span>
+              <strong id="total-students" class="summary-card__value">—</strong>
+              <span class="summary-card__hint">Cadastros de estudantes</span>
+            </article>
+            <article class="summary-card glass">
+              <span class="summary-card__label">Matrículas</span>
+              <strong id="total-enrollments" class="summary-card__value">—</strong>
+              <span class="summary-card__hint">Vínculos entre alunos e cursos</span>
+            </article>
+            <article class="summary-card glass">
+              <span class="summary-card__label">Cursos finalizados</span>
+              <strong id="total-finished" class="summary-card__value">—</strong>
+              <span class="summary-card__hint">Registrados neste navegador</span>
+            </article>
+          </div>
+        </section>
+        <section class="dashboard-section course-overview glass" aria-labelledby="courses-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Acompanhamento</p>
+              <h2 id="courses-title">Cursos e matrículas</h2>
+            </div>
+          </div>
+          <div id="course-overview" class="course-overview__list" aria-live="polite">
+            <p class="course-overview__empty">Carregando cursos...</p>
+          </div>
         </section>
       </div>
     </main>
