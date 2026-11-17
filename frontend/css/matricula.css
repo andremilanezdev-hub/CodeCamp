@@ -32,6 +32,56 @@
   padding: clamp(22px, 4vw, 36px);
 }
 
+.enrollment-roster {
+  margin-top: 24px;
+}
+
+.enrolled-students-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.enrolled-students-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.enrolled-students-list__details {
+  display: grid;
+  gap: 4px;
+}
+
+.enrolled-students-list__details span,
+.enrolled-students-list__empty {
+  color: var(--color-muted);
+}
+
+.enrolled-students-list__empty {
+  padding: 12px 0;
+}
+
+.enrollment-button--remove {
+  flex: 0 0 auto;
+  color: #fff;
+  border: 1px solid rgba(255, 112, 138, 0.55);
+  border-radius: 10px;
+  background: rgba(194, 44, 82, 0.78);
+}
+
+.enrollment-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .enrollment-card__heading {
   margin-bottom: 26px;
 }
@@ -125,6 +175,11 @@
   }
 
   .enrollment-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .enrolled-students-list__item {
     align-items: stretch;
     flex-direction: column;
   }

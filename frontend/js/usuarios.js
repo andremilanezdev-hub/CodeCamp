@@ -34,7 +34,8 @@ function obterNomeEmpresa(usuario) {
     return empresa;
   }
 
-  if (usuario.razaosocialEmprea) return usuario.razaosocialEmprea;
+  // O DTO UsuarioConsultaResponse expõe a propriedade como `razaoSocialEmprea`.
+  if (usuario.razaoSocialEmprea) return usuario.razaoSocialEmprea;
 
   if (!empresa || typeof empresa !== "object") {
     return "Não informado";

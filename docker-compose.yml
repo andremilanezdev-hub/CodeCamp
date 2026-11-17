@@ -1,0 +1,34 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST:-172.20.0.3}:${DB_PORT:-5432}/${DB_NAME:-code_camp}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-admin}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-senha_segura_123}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
+      SPRING_SECRET: ${JWT_SECRET:-asjdfajsofweiurowuo3rslajfaso31}
+    ports:
+      - "8080:8080"
+    networks:
+      - app
+      - database
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
+  database:
+    external: true
+    name: ${DOCKER_NETWORK:-postgresql_default}

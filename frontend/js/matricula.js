@@ -6,6 +6,8 @@ const courseSelect = document.querySelector("#course-id");
 const studentSelect = document.querySelector("#student-id");
 const submitButton = document.querySelector("#enrollment-submit");
 const feedback = document.querySelector("#enrollment-feedback");
+const enrolledCourseLabel = document.querySelector("#enrolled-course-label");
+const enrolledStudentsList = document.querySelector("#enrolled-students-list");
 const navigationLinks = document.querySelectorAll(".sidebar__link");
 const currentPage = window.location.pathname.split("/").pop();
 
@@ -108,6 +110,57 @@ function carregarOpcoesDeEstudantes() {
   atualizarBotao();
 }
 
+function exibirAlunosMatriculados() {
+  const course = courses.find((item) => String(item.id) === courseSelect.value);
+  enrolledStudentsList.replaceChildren();
+
+  if (!course) {
+    enrolledCourseLabel.textContent = "Selecione um curso para gerenciar as matrículas.";
+    const empty = document.createElement("li");
+    empty.className = "enrolled-students-list__empty";
+    empty.textContent = "Selecione um curso para consultar os alunos.";
+    enrolledStudentsList.append(empty);
+    return;
+  }
+
+  const matriculados = Array.isArray(course.alunos) ? course.alunos : [];
+  enrolledCourseLabel.textContent = `${course.nome || `Curso #${course.id}`} · ${matriculados.length} aluno(s)`;
+
+  if (matriculados.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "enrolled-students-list__empty";
+    empty.textContent = "Este curso ainda não possui alunos matriculados.";
+    enrolledStudentsList.append(empty);
+    return;
+  }
+
+  matriculados.forEach((student) => {
+    const item = document.createElement("li");
+    item.className = "enrolled-students-list__item";
+
+    const details = document.createElement("div");
+    details.className = "enrolled-students-list__details";
+    const name = document.createElement("strong");
+    name.textContent = student.nome || `Estudante #${student.id}`;
+    details.append(name);
+    if (student.email) {
+      const email = document.createElement("span");
+      email.textContent = student.email;
+      details.append(email);
+    }
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "enrollment-button enrollment-button--remove";
+    removeButton.textContent = "Remover aluno";
+    removeButton.setAttribute("aria-label", `Remover ${student.nome || `estudante ${student.id}`} do curso`);
+    removeButton.addEventListener("click", () => removerMatricula(course, student, removeButton));
+
+    item.append(details, removeButton);
+    enrolledStudentsList.append(item);
+  });
+}
+
 function atualizarBotao() {
   submitButton.disabled = !instructorId || !courseSelect.value || !studentSelect.value;
 }
@@ -142,6 +195,7 @@ async function carregarDados() {
     instructorIdInput.value = instructorId;
     carregarOpcoesDeCursos();
     carregarOpcoesDeEstudantes();
+    exibirAlunosMatriculados();
     mostrarFeedback(courses.some((course) => String(course.usuarioCadastro?.id) === String(instructorId))
       ? "Selecione um curso e um estudante para continuar."
       : "Você ainda não possui cursos cadastrados.");
@@ -162,6 +216,8 @@ async function realizarMatricula(event) {
   submitButton.disabled = true;
   submitButton.textContent = "Salvando matrícula...";
   mostrarFeedback("Enviando matrícula...");
+  const cursoId = courseSelect.value;
+  const estudanteId = studentSelect.value;
 
   try {
     // Os nomes JSON seguem exatamente MatriculaRequest no backend.
@@ -169,19 +225,21 @@ async function realizarMatricula(event) {
       method: "POST",
       body: {
         usuario_id: Number(instructorId),
-        estudante_id: Number(studentSelect.value),
-        curso_id: Number(courseSelect.value),
+        estudante_id: Number(estudanteId),
+        curso_id: Number(cursoId),
       },
     });
 
-    const cursoMatriculado = courses.find((course) => String(course.id) === courseSelect.value);
-    const estudanteMatriculado = students.find((student) => String(student.id) === studentSelect.value);
+    const cursoMatriculado = courses.find((course) => String(course.id) === String(cursoId));
+    const estudanteMatriculado = students.find((student) => String(student.id) === String(estudanteId));
     if (cursoMatriculado && estudanteMatriculado) {
       cursoMatriculado.alunos = [...(cursoMatriculado.alunos ?? []), estudanteMatriculado];
     }
 
     mostrarFeedback(resposta?.mensagem || "Matrícula realizada com sucesso.", "success");
+    studentSelect.value = "";
     carregarOpcoesDeEstudantes();
+    exibirAlunosMatriculados();
   } catch (error) {
     mostrarFeedback(error.message || "Não foi possível concluir a matrícula.", "error");
   } finally {
@@ -190,7 +248,30 @@ async function realizarMatricula(event) {
   }
 }
 
-courseSelect.addEventListener("change", carregarOpcoesDeEstudantes);
+async function removerMatricula(course, student, button) {
+  if (!window.confirm(`Remover ${student.nome || `o estudante ${student.id}`} do curso “${course.nome}”?`)) return;
+
+  button.disabled = true;
+  button.textContent = "Removendo...";
+  try {
+    await apiRequest(`/curso/${encodeURIComponent(course.id)}/matricula/${encodeURIComponent(student.id)}?usuario_id=${encodeURIComponent(instructorId)}`, {
+      method: "DELETE",
+    });
+    course.alunos = (course.alunos ?? []).filter((aluno) => String(aluno.id) !== String(student.id));
+    carregarOpcoesDeEstudantes();
+    exibirAlunosMatriculados();
+    mostrarFeedback("Matrícula removida com sucesso.", "success");
+  } catch (error) {
+    mostrarFeedback(error.message || "Não foi possível remover a matrícula.", "error");
+    button.disabled = false;
+    button.textContent = "Remover aluno";
+  }
+}
+
+courseSelect.addEventListener("change", () => {
+  carregarOpcoesDeEstudantes();
+  exibirAlunosMatriculados();
+});
 studentSelect.addEventListener("change", atualizarBotao);
 enrollmentForm.addEventListener("submit", realizarMatricula);
 

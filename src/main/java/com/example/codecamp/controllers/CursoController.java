@@ -12,6 +12,7 @@ import com.example.codecamp.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -231,6 +232,38 @@ public class CursoController {
                 "Matrícula realizada com sucesso"
         );
         return ResponseEntity.ok(resposta);
+    }
+
+    /**
+     * Remove a associação entre um estudante e um curso do instrutor autenticado.
+     */
+    @DeleteMapping("/{cursoId}/matricula/{estudanteId}")
+    @Transactional
+    @Operation(summary = "Remover matrícula", description = "Remove um estudante do curso pertencente ao instrutor autenticado.")
+    public ResponseEntity<Void> removerMatricula(
+            @PathVariable Long cursoId,
+            @PathVariable Long estudanteId,
+            @RequestParam("usuario_id") Long usuarioId,
+            @RequestAttribute("usuarioAutenticadoCpf") String cpfAutenticado) {
+        validarId(cursoId, "curso_id");
+        validarId(estudanteId, "estudante_id");
+        validarId(usuarioId, "usuario_id");
+
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado"));
+        validarPropriedadeDoCurso(curso, usuarioId, cpfAutenticado);
+
+        Estudante estudante = estudanteRepository.findById(estudanteId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudante não encontrado"));
+        if (!estudanteRepository.existsByIdAndCursos_Id(estudanteId, cursoId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estudante não está matriculado neste curso");
+        }
+
+        estudante.getCursos().removeIf(cursoMatriculado -> Objects.equals(cursoMatriculado.getId(), cursoId));
+        curso.getEstudantes().removeIf(estudanteMatriculado -> Objects.equals(estudanteMatriculado.getId(), estudanteId));
+        estudanteRepository.save(estudante);
+
+        return ResponseEntity.noContent().build();
     }
 
     private Usuario buscarInstrutor(Long usuarioId, String cpfAutenticado) {
