@@ -1,0 +1,210 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Length 3249 >>
+stream
+BT
+/F1 9 Tf
+48 790 Td
+12 TL
+(Relatorio de Auditoria de Codigo) Tj T*
+() Tj T*
+(Projeto analisado: frontend-backend-demo - Escopo: exclusivamente os arquivos contidos nesse) Tj T*
+(diretorio - Data: 23 de novembro de 2026) Tj T*
+() Tj T*
+(Conclusao: o projeto segue a estrutura de frontend Vanilla JS proposta e concentra as) Tj T*
+(requisicoes em api.js. Foram identificados riscos de XSS armazenado/refletido por) Tj T*
+(interpolacao em innerHTML, persistencia do token em localStorage, divergencia da URL-base) Tj T*
+(exigida e comportamentos que apresentam dados demonstrativos como se fossem dados reais.) Tj T*
+() Tj T*
+(Visao Geral) Tj T*
+() Tj T*
+(O frontend contem uma tela de login, um dashboard com navegacao por secoes e uma tabela de) Tj T*
+(usuarios. A comunicacao HTTP esta centralizada em js/api.js, com fetch, async/await,) Tj T*
+(serializacao JSON, leitura do Content-Type, tratamento de respostas nao-OK e limpeza de) Tj T*
+(token em respostas 401/403. HTML semantico, CSS externo e scripts no final do body estao) Tj T*
+(presentes.) Tj T*
+() Tj T*
+(A revisao foi estatica, baseada apenas nos arquivos do diretorio indicado. Nao foram) Tj T*
+(executados testes, nem validada a disponibilidade/contrato do servidor. Nao foram) Tj T*
+(encontrados frameworks ou bibliotecas externas no codigo auditado.) Tj T*
+() Tj T*
+(Desvios de Padrao) Tj T*
+() Tj T*
+(1. URL da API fora do padrao de sala de aula MEDIO) Tj T*
+() Tj T*
+(js/api.js:1 aponta para https://aulajovem20262.onrender.com, enquanto o padrao fornecido) Tj T*
+(determina http://localhost:8080. Isso pode impedir a execucao no ambiente local esperado ou) Tj T*
+(direcionar chamadas para ambiente remoto.) Tj T*
+() Tj T*
+(2. Regras de autenticacao parcialmente duplicadas) Tj T*
+() Tj T*
+(js/api.js:3-16 gerencia o token, mas js/dashboard.js:94-96, 115-118 tambem le/remove) Tj T*
+(diretamente o token. O fluxo continua funcional, porem deixa parte da responsabilidade de) Tj T*
+(sessao fora do modulo de API. sessionStorage.isLoggedIn e mantido em paralelo ao token e nao) Tj T*
+(e necessario para a decisao de acesso ao dashboard.) Tj T*
+() Tj T*
+(Bugs e Falhas Logicas) Tj T*
+() Tj T*
+(3. Login redireciona com token potencialmente expirado/invalido MEDIO) Tj T*
+() Tj T*
+(js/main.js:6-8 considera a mera presenca de qualquer token suficiente para sair da tela de) Tj T*
+(login. O dashboard tambem verifica apenas presenca \(js/dashboard.js:94-97\). Assim, um token) Tj T*
+(expirado pode permitir a entrada visual no painel ate uma chamada protegida resultar em) Tj T*
+(401/403. A autorizacao real deve continuar sendo aplicada pelo backend; o frontend nao) Tj T*
+(valida validade/expiracao antes do redirecionamento.) Tj T*
+() Tj T*
+(4. Dados estaticos apresentados como metricas e cadastros atuais) Tj T*
+() Tj T*
+(js/dashboard.js:7-21, 80-84 exibe contagens fixas e dados fixos da empresa. A area Curso) Tj T*
+(tambem e conteudo demonstrativo \(js/dashboard.js:34-45\) e o botao Adicionar Usuario nao tem) Tj T*
+(acao \(js/dashboard.js:53\). Sem indicacao de demonstracao, o usuario pode interpretar os) Tj T*
+(valores como dados reais; acoes esperadas nao produzem resultado.) Tj T*
+ET
+BT /F1 8 Tf 48 28 Td (Auditoria estatica - frontend-backend-demo - Pagina 1/3) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 2695 >>
+stream
+BT
+/F1 9 Tf
+48 790 Td
+12 TL
+() Tj T*
+(5. Resposta fora do formato esperado vira lista vazia) Tj T*
+() Tj T*
+(js/usuarios.js:13-15 converte qualquer resposta nao-array em lista vazia e mostra Nenhum) Tj T*
+(usuario encontrado. Uma resposta valida encapsulada em objeto, ou um formato inesperado da) Tj T*
+(API, fica indistinguivel de uma lista realmente vazia, ocultando incompatibilidade de) Tj T*
+(contrato.) Tj T*
+() Tj T*
+(6. Campos obrigatorios HTML tem validacao nativa desativada) Tj T*
+() Tj T*
+(index.html:17 usa novalidate. A validacao manual em js/main.js:18-24 cobre apenas valores) Tj T*
+(vazios apos trim\(\); isso e suficiente para os campos atuais, mas desativa as mensagens e a) Tj T*
+(validacao nativas dos atributos required.) Tj T*
+() Tj T*
+(Alertas de Seguranca) Tj T*
+() Tj T*
+(7. Possivel XSS ao renderizar dados da API em HTML ALTO) Tj T*
+() Tj T*
+(js/usuarios.js:26-36 interpola id, nome, cpf, dataNascimento e razaoSocialEmpresa) Tj T*
+(diretamente em innerHTML. Se algum valor vier controlado por usuario e contiver) Tj T*
+(marcacao/atributos executaveis, o navegador pode interpreta-lo como HTML. O nivel de) Tj T*
+(exploracao depende da possibilidade de gravar/retornar tais valores pela API, que nao foi) Tj T*
+(auditada aqui.) Tj T*
+() Tj T*
+(8. Possivel XSS via mensagem de erro MEDIO) Tj T*
+() Tj T*
+(js/api.js:84-89 transforma resposta de erro em mensagem e js/usuarios.js:38-43 injeta) Tj T*
+(error.message via innerHTML. Uma mensagem retornada pelo servidor que contenha HTML pode ser) Tj T*
+(interpretada. A renderizacao textual do login em main.js:10-12 usa textContent, sem esse) Tj T*
+(problema.) Tj T*
+() Tj T*
+(9. Token bearer persistido em localStorage MEDIO) Tj T*
+() Tj T*
+(js/api.js:7-16 persiste o token em localStorage, acessivel a qualquer JavaScript executado) Tj T*
+(na origem. Em caso de XSS, o token pode ser lido e reutilizado. O token tambem persiste apos) Tj T*
+(fechar o navegador. A mitigacao depende da arquitetura de autenticacao; considere cookie) Tj T*
+(HttpOnly/Secure/SameSite ou, se mantido no cliente, reduzir exposicao e duracao. A protecao) Tj T*
+(do servidor contra uso indevido nao foi verificada.) Tj T*
+() Tj T*
+(10. Ocultacao do painel e controle apenas no cliente) Tj T*
+() Tj T*
+(js/dashboard.js:94-97 redireciona se nao encontrar token, mas isso nao constitui) Tj T*
+(autorizacao. As chamadas protegidas enviam Bearer token, porem nao e possivel concluir pelo) Tj T*
+(frontend se todos os endpoints e operacoes sao autorizados no servidor. Trate a verificacao) Tj T*
+(do dashboard somente como controle de navegacao.) Tj T*
+() Tj T*
+ET
+BT /F1 8 Tf 48 28 Td (Auditoria estatica - frontend-backend-demo - Pagina 2/3) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 2347 >>
+stream
+BT
+/F1 9 Tf
+48 790 Td
+12 TL
+(Pontos Confusos e Alucinacoes) Tj T*
+() Tj T*
+(- data?.mensagem em js/main.js:39-41 e sintaxe padrao de JavaScript moderno; nao e API) Tj T*
+(inventada, mas exige navegador com suporte a optional chaining.) Tj T*
+() Tj T*
+(- Nao foram encontrados usos de APIs inexistentes no JavaScript padrao. fetch, localStorage,) Tj T*
+(sessionStorage, classList.toggle e template literals sao APIs/recursos validos em) Tj T*
+(navegadores modernos.) Tj T*
+() Tj T*
+(- Ha inconsistencia entre Cursos como disciplinas, Usuarios como colaboradores e Alunos no) Tj T*
+(texto do sistema. E ambiguidade de dominio/conteudo, nao defeito de sintaxe.) Tj T*
+() Tj T*
+(- O atributo novalidate junto com required pode confundir a intencao da validacao.) Tj T*
+() Tj T*
+(Sugestoes de Melhoria \(Sem Codigo Pronto\)) Tj T*
+() Tj T*
+(- Alinhar a URL-base ao ambiente de desenvolvimento e separar configuracao local/remota sem) Tj T*
+(alterar o modulo centralizado de requisicoes.) Tj T*
+() Tj T*
+(- Renderizar valores externos como texto \(por exemplo, construir nos DOM e atribuir) Tj T*
+(textContent\) ou aplicar escape contextual consistente antes de usar HTML.) Tj T*
+() Tj T*
+(- Evitar guardar credenciais bearer em armazenamento acessivel a scripts; avaliar cookie) Tj T*
+(HttpOnly com flags adequadas e politicas de expiracao/renovacao.) Tj T*
+() Tj T*
+(- Centralizar leitura, gravacao e remocao de sessao em um unico modulo e evitar indicadores) Tj T*
+(redundantes de login.) Tj T*
+() Tj T*
+(- Validar e tratar explicitamente o formato da resposta de usuarios para distinguir lista) Tj T*
+(vazia de incompatibilidade de contrato.) Tj T*
+() Tj T*
+(- Identificar dados e telas demonstrativas e ligar botoes a acoes implementadas ou) Tj T*
+(apresentar estado indisponivel claramente.) Tj T*
+() Tj T*
+(- Manter autorizacao e validacao de permissoes no servidor, independentemente dos) Tj T*
+(redirecionamentos feitos pelo navegador.) Tj T*
+() Tj T*
+(Limites: Este relatorio nao atribui vulnerabilidades ao backend nem confirma explorabilidade) Tj T*
+(sem examinar o servidor. Os achados de XSS sao riscos condicionais aos dados/mensagens) Tj T*
+(recebidos e inseridos no DOM. Escopo exclui qualquer arquivo fora de frontend-backend-demo.) Tj T*
+() Tj T*
+ET
+BT /F1 8 Tf 48 28 Td (Auditoria estatica - frontend-backend-demo - Pagina 3/3) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000133 00000 n 
+0000000230 00000 n 
+0000003531 00000 n 
+0000003657 00000 n 
+0000006404 00000 n 
+0000006530 00000 n 
+0000008929 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+9055
+%%EOF
