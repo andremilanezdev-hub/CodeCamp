@@ -1,5 +1,6 @@
 // URL base indicada pelo Swagger. Os endpoints documentados não usam o prefixo /api.
-export const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "https://codecamp-a929.onrender.com";
+//**export const BASE_URL = "http://localhost:8080";
 const TOKEN_KEY = "token";
 
 /** Salva o JWT retornado pela API para as próximas chamadas. */
