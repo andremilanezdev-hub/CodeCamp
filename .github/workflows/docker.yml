@@ -7,6 +7,11 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      DB_NAME: code_camp
+      DB_USER: codecamp_ci
+      DB_PASSWORD: ci-only-database-password
+      JWT_SECRET: ci-only-jwt-secret-0123456789abcdef0123456789abcdef
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -31,7 +36,7 @@ jobs:
           echo "--- Logs do Banco de Dados ---"
           docker-compose logs db || echo "Serviço 'db' não encontrado ou sem logs."
           echo "--- Logs da API ---"
-          docker-compose logs api || echo "Serviço 'api' não encontrado ou sem logs."
+          docker-compose logs backend || echo "Serviço 'backend' não encontrado ou sem logs."
 
       - name: 📞 Realizar teste de saúde na API
         run: curl --fail http://localhost:8080/swagger-ui/index.html
