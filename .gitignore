@@ -2,3 +2,5 @@ gitandremilanezdev
 *.pem
 *.key
 .env
+.env.example
+.idea/

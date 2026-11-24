@@ -112,7 +112,9 @@ public class CursoController {
         modulo.setUsuarioCadastro(buscarInstrutor(request.getUsuario_id(), cpfAutenticado));
         modulo.setDataCadastro(LocalDateTime.now());
         modulo.setStatus("A");
-        return moduloRepository.save(modulo);
+        Modulo moduloSalvo = moduloRepository.save(modulo);
+        atualizarCargaHorariaCurso(curso);
+        return moduloSalvo;
     }
 
     private void validarId(Long id, String campo) {
@@ -131,7 +133,7 @@ public class CursoController {
 
         Curso cursoBanco = new Curso();
         cursoBanco.setNome(cursoRequest.getNome());
-        cursoBanco.setCargahoraria(cursoRequest.getCargahoraria());
+        cursoBanco.setCargahoraria(0);
         cursoBanco.setDataCadastro(LocalDateTime.now());
         cursoBanco.setStatus("A");
         Usuario instrutor = buscarInstrutor(
@@ -156,13 +158,17 @@ public class CursoController {
         if (curso !=null){
             // Usa o nome recebido no corpo; atribuir o valor atual impedia alterações pelo PUT.
             curso.setNome(cursoRequest.getNome());
-            curso.setCargahoraria(cursoRequest.getCargahoraria());
             curso.setDataAtualizacao(LocalDateTime.now());
             cursoRepository.save(curso);
             return ResponseEntity.ok(new CursoResponse(curso.getId(),
                     "Curso Atualizado com sucesso!"));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private void atualizarCargaHorariaCurso(Curso curso) {
+        curso.setCargahoraria(moduloRepository.somarCargaHorariaPorCurso(curso.getId()));
+        cursoRepository.save(curso);
     }
 
     @PatchMapping("/{id}/status")

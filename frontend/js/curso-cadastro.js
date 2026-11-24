@@ -2,7 +2,6 @@ import { apiRequest } from "./api.js";
 
 const form = document.querySelector("#course-form");
 const nameInput = document.querySelector("#course-name");
-const hoursInput = document.querySelector("#course-hours");
 const instructorInput = document.querySelector("#course-instructor-id");
 const courseIdInput = document.querySelector("#course-id");
 const saveButton = document.querySelector("#course-save-button");
@@ -74,7 +73,6 @@ async function carregarCursoParaEdicao(idInstrutor) {
 
     courseIdInput.value = String(curso.id);
     nameInput.value = curso.nome ?? "";
-    hoursInput.value = curso.cargahoraria ?? "";
     pageTitle.textContent = `Editar curso #${curso.id}`;
     document.querySelector("#course-form-title").textContent = "Atualizar dados do curso";
     saveButton.textContent = "Salvar alterações";
@@ -88,18 +86,11 @@ async function carregarCursoParaEdicao(idInstrutor) {
 
 function obterDadosCurso() {
   const nome = nameInput.value.trim();
-  const cargaHoraria = Number(hoursInput.value);
   const usuarioId = Number(instructorInput.value);
 
   if (!nome) {
     setMessage("Informe o nome do curso.", "error");
     nameInput.focus();
-    return null;
-  }
-
-  if (!Number.isInteger(cargaHoraria) || cargaHoraria <= 0) {
-    setMessage("Informe uma carga horária inteira maior que zero.", "error");
-    hoursInput.focus();
     return null;
   }
 
@@ -111,7 +102,6 @@ function obterDadosCurso() {
   // O cadastro usa estes campos de CursoRequest; o CPF autenticado chega ao backend pelo JWT.
   return {
     nome,
-    cargahoraria: cargaHoraria,
     usuario_id: usuarioId,
   };
 }

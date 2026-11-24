@@ -39,7 +39,7 @@
             <input id="course-instructor-id" type="hidden">
             <input id="course-id" type="hidden">
             <div class="catalog-field"><label for="course-name">Nome do curso</label><input id="course-name" name="nome" type="text" maxlength="150" required></div>
-            <div class="catalog-field"><label for="course-hours">Carga horária (horas)</label><input id="course-hours" name="cargahoraria" type="number" min="1" step="1" required></div>
+            <p>A carga horária será calculada automaticamente pela soma das cargas horárias dos módulos.</p>
             <p id="course-form-message" class="catalog-form-message" role="status" aria-live="polite">Identificando instrutor...</p>
             <div class="catalog-form-actions"><a class="action-button action-button--secondary" href="cursos.html">Cancelar</a><button id="course-save-button" type="submit" disabled>Salvar curso</button></div>
           </form>

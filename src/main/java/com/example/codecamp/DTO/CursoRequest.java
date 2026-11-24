@@ -8,7 +8,6 @@ public class CursoRequest {
 
     private Long id;
     private String nome;
-    private long cargahoraria;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataAtualizacao;
     private String status;
@@ -31,14 +30,6 @@ public class CursoRequest {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public long getCargahoraria() {
-        return cargahoraria;
-    }
-
-    public void setCargahoraria(long cargahoraria) {
-        this.cargahoraria = cargahoraria;
     }
 
     public LocalDateTime getDataCadastro() {

@@ -103,7 +103,9 @@ public class ModuloController {
         modulo.setUsuarioCadastro(buscarInstrutor(request.getUsuario_id(), cpfAutenticado));
         modulo.setDataCadastro(LocalDateTime.now());
         modulo.setStatus("A");
-        return moduloRepository.save(modulo);
+        Modulo moduloSalvo = moduloRepository.save(modulo);
+        atualizarCargaHorariaCurso(curso);
+        return moduloSalvo;
     }
 
     private void validarId(Long id, String campo) {
@@ -128,6 +130,7 @@ public class ModuloController {
             modulo.setCargahoraria((long) moduloRequest.getCargahoraria());
             modulo.setDataAtualizacao(LocalDateTime.now());
             moduloRepository.save(modulo);
+            atualizarCargaHorariaCurso(modulo.getCurso());
             return ResponseEntity.ok(new ModuloResponse(modulo.getId(),
                     "Modulo Atualizado com sucesso!"));
         }
@@ -148,6 +151,7 @@ public class ModuloController {
                     modulo, moduloRequest.getUsuario_id(), cpfAutenticado);
             modulo.setStatus(moduloRequest.getStatus());
             moduloRepository.save(modulo);
+            atualizarCargaHorariaCurso(modulo.getCurso());
             return ResponseEntity.ok(new ModuloResponse(modulo.getId(),
                     "Status Modulo Atualizado com sucesso!"));
         }
@@ -167,9 +171,15 @@ public class ModuloController {
             modulo.setStatus("D");
             //salva no banco
             moduloRepository.save(modulo);
+            atualizarCargaHorariaCurso(modulo.getCurso());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private void atualizarCargaHorariaCurso(Curso curso) {
+        curso.setCargahoraria(moduloRepository.somarCargaHorariaPorCurso(curso.getId()));
+        cursoRepository.save(curso);
     }
 
     private Usuario buscarInstrutor(Long usuarioId, String cpfAutenticado) {
